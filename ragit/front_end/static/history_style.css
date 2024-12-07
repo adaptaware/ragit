@@ -1,0 +1,217 @@
+/* Defines the styles used for the history web page. */
+
+/*
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+ */
+
+.top_pane {
+    width: 100%;
+    background: #007BFF;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.top_pane h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.main_content {
+    display: flex;
+    flex: 1;
+}
+
+.sidebar {
+    width: 400px;
+    background: #333;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    color: #ddd;
+    height: auto;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+    cursor: pointer;
+    padding: 10px;
+    background: #444;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.sidebar ul li:hover {
+    background: #555;
+}
+
+.container {
+    flex-grow: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.section {
+    margin-bottom: 20px;
+    width: 900px;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+.response, .query, .prompt, .chunks, .grade {
+    padding: 15px;
+    background: #eee;
+    border-radius: 5px;
+}
+
+
+.chunks p {
+    margin: 5px 0;
+}
+
+.chunks_section {
+    /*background-color: #e8e4db;*/
+}
+
+.grade {
+    display: flex;
+    align-items: center;
+}
+
+.thumb {
+    cursor: pointer;
+    font-size: 24px;
+    margin-left: 10px;
+}
+
+.thumb:hover {
+    color: #007BFF;
+}
+
+
+.thumps_up_query {
+    background: #4CAF50;
+}
+
+.thumps_down_query {
+    background: #b00a37;
+}
+
+.action_button {
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Styles for header displays.*/
+
+.container h1 {
+    display: inline;
+    font-size: 1.8em;
+    font-weight: bold;
+    margin: 0;
+    margin-right: 4em;
+}
+
+.meta_data {
+    display: inline;
+    font-size: 0.8em;
+    font-weight: lighter;
+    margin-left: 2em;
+    color: #4d4b4b;
+}
+
+/*Styles for the label-value function.*/
+
+.meta_container_div {
+    display: inherit;
+    background-color: #e8e4db;
+    height: 1.5em;
+    padding: 12px;
+    width: auto;
+}
+
+
+.value_rect {
+    justify-content: center;
+    align-items: center;
+    background-color: #3d2c05;
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    margin: 12px 12px 12px 6px;
+    padding: 6px;
+}
+
+.value_container {
+    color: #555;
+    white-space: nowrap;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+/*Styles for the modal editor.*/
+.modal_editor {
+    inset: 0.5rem;
+    margin: auto;
+    height: 80%;
+    width: 80%;
+}
+
+.modal_editor span {
+    background-color: #eeeeee;
+    margin-left: 12px;
+}
+.modal_editor::backdrop {
+    background-color: #231d14;
+    opacity: 0.4;
+}
+
+
+.modal_editor .title {
+    background-color: #eeeeee;
+    margin: 8px 0 12px 0;
+    padding: 8px;
+}
+
+.pdf-frame {
+    width: 100%;
+    height: calc(100% - 40px);
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+}

@@ -1,0 +1,196 @@
+.gitignore:.ragit-env
+README.md:<img src="ragit/front_end/static/ragit.jpeg"  width="100" height="100">
+Vagrantfile:mkdir -p /home/vagrant/ragit-data
+Vagrantfile:chown vagrant:vagrant /home/vagrant/ragit-data
+Vagrantfile:echo "alias ragit='python3 /vagrant/ragit/backend/ragit_cmd.py'" >> /home/vagrant/.bashrc
+Vagrantfile:      # Forward ragit's UI port from guest to host
+Vagrantfile:            host_path = "C:\\Users\\#{USER_NAME}\\ragit-data"
+Vagrantfile:            host_path = "/home/#{USER_NAME}/ragit-data"
+Vagrantfile:      config.vm.synced_folder host_path, "/home/vagrant/ragit-data"
+Vagrantfile:        vb.name = "ragit"
+Vagrantfile:      config.vm.hostname = "ragit"
+docker-compose.yaml:      dockerfile: ragit/front_end/Dockerfile
+docker-compose.yaml:      - ${SHARED_DIR}:/root/ragit-data
+docker-compose.yaml:      dockerfile: ragit/backend/Dockerfile
+docker-compose.yaml:      - ${SHARED_DIR}:/root/ragit-data
+ragit/backend/Dockerfile:WORKDIR /ragit
+ragit/backend/Dockerfile:COPY ragit/backend /ragit/backend
+ragit/backend/Dockerfile:COPY ragit/libs /ragit/libs
+ragit/backend/Dockerfile:#COPY requirements.txt /ragit
+ragit/backend/Dockerfile:#RUN pip3 install --no-cache-dir -r /ragit/requirements.txt
+ragit/backend/Dockerfile:CMD ["python3.10", "/ragit/backend/ragit_cmd.py"]
+ragit/backend/process_docs.py:  `~/ragit-data/<collection-name>/documents`. Users need to create this
+ragit/backend/process_docs.py:  `ragit/db/create-db.sh <collection-name>` to create it.
+ragit/backend/process_docs.py:- This script assumes a specific directory structure (`~/ragit-data`) for
+ragit/backend/process_docs.py:- The script relies on an external script `ragit/db/create-db.sh` for
+ragit/backend/process_docs.py:import ragit.libs.common as common
+ragit/backend/process_docs.py:import ragit.libs.dbutil as dbutil
+ragit/backend/process_docs.py:import ragit.libs.rag_mgr as rag_mgr
+ragit/backend/ragit_cmd.py:import ragit.libs.common as common
+ragit/backend/ragit_cmd.py:import ragit.libs.dbutil as dbutil
+ragit/backend/ragit_cmd.py:import ragit.libs.rag_mgr as rag_mgr
+ragit/front_end/Dockerfile:WORKDIR /ragit
+ragit/front_end/Dockerfile:COPY ragit/front_end /ragit/front_end
+ragit/front_end/Dockerfile:COPY ragit/libs /ragit/libs
+ragit/front_end/Dockerfile:# COPY requirements.txt /ragit
+ragit/front_end/Dockerfile:# RUN pip3 install --no-cache-dir -r /ragit/requirements.txt
+ragit/front_end/Dockerfile:CMD ["python3.10", "/ragit/front_end/app.py"]
+ragit/front_end/app.py:import ragit.libs.common as common
+ragit/front_end/app.py:import ragit.libs.dbutil as dbutil
+ragit/front_end/app.py:import ragit.libs.rag_mgr as rag_mgr
+ragit/front_end/app.py:import ragit.libs.user_registry as user_registry
+ragit/front_end/app.py:            auth_token = request.cookies.get('ragit_auth_token')
+ragit/front_end/app.py:            response.set_cookie('ragit_auth_token', auth_token)
+ragit/front_end/app.py:            auth_token = request.cookies.get('ragit_auth_token')
+ragit/front_end/app.py:            response.set_cookie('ragit_auth_token', auth_token)
+ragit/front_end/app.py:            auth_token = request.cookies.get('ragit_auth_token')
+ragit/front_end/app.py:            auth_token = request.cookies.get('ragit_auth_token')
+ragit/front_end/app.py:            auth_token = request.cookies.get('ragit_auth_token')
+ragit/front_end/app.py:            auth_token = request.cookies.get('ragit_auth_token')
+ragit/front_end/app.py:            auth_token = request.cookies.get('ragit_auth_token')
+ragit/front_end/app.py:            auth_token = request.cookies.get('ragit_auth_token')
+ragit/front_end/app.py:            auth_token = request.cookies.get('ragit_auth_token')
+ragit/front_end/app.py:            auth_token = request.cookies.get('ragit_auth_token')
+ragit/front_end/app.py:            return web.HTTPFound('/ragit')
+ragit/front_end/app.py:            response = aiohttp.web.HTTPFound('/ragit')
+ragit/front_end/app.py:            response.set_cookie('ragit_auth_token', auth_token)
+ragit/front_end/app.py:    ragit_handler = RagitHandler()
+ragit/front_end/app.py:            web.get('/', ragit_handler.default_handler),
+ragit/front_end/app.py:            web.get('/login', ragit_handler.login_screen, name="login"),
+ragit/front_end/app.py:            web.post('/login', ragit_handler.login_validate),
+ragit/front_end/app.py:            web.get('/ragit', ragit_handler.main_page_handler),
+ragit/front_end/app.py:            web.post('/ragit', ragit_handler.query_handler),
+ragit/front_end/app.py:            web.get('/signup', ragit_handler.signup_screen),
+ragit/front_end/app.py:            web.post('/signup', ragit_handler.signup_new_acount),
+ragit/front_end/app.py:            web.post('/vote', ragit_handler.vote),
+ragit/front_end/app.py:            web.get('/history', ragit_handler.history),
+ragit/front_end/app.py:            web.get('/queries', ragit_handler.get_all_queries),
+ragit/front_end/app.py:            web.delete('/queries/{msg_id}', ragit_handler.delete_query),
+ragit/front_end/app.py:            web.get('/admin', ragit_handler.admin_handler),
+ragit/front_end/app.py:            web.post('/admin', ragit_handler.upload_file),
+ragit/front_end/app.py:            web.get('/document/{file_path:.*}', ragit_handler.document_handler),
+ragit/front_end/app.py:                    ragit_handler.speechify_handler),
+ragit/front_end/app.py:            web.get('/recentchats/{count}', ragit_handler.recent_chats_handler),
+ragit/front_end/app.py:                     ragit_handler.update_user_reaction)
+ragit/front_end/config.yaml:  name: ragit
+ragit/front_end/static/query_retrieved.js: * This function triggers an AJAX POST request to the "/ragit" endpoint,
+ragit/front_end/static/query_retrieved.js:        url: "/ragit",
+ragit/front_end/static/query_retrieved.js: * This function deletes the 'user_name' and 'ragit_auth_token' cookies from
+ragit/front_end/static/query_retrieved.js:    $.removeCookie('ragit_auth_token', {path: '/'});
+ragit/front_end/templates/templates/base.html:    <img src="/static/ragit.jpeg" width="76px" height=100%>
+ragit/front_end/templates/templates/base.html:        <li id="chat-li"><a href="/ragit">Chat</a></li>
+ragit/libs/common.py:_SHARED_DIR = "ragit-data"
+ragit/libs/dbutil.py:import ragit.libs.common as common
+ragit/libs/impl/chunks_mgr.py:import ragit.libs.common as common
+ragit/libs/impl/chunks_mgr.py:import ragit.libs.sanitizer as sanitizer
+ragit/libs/impl/chunks_mgr.py:import ragit.libs.dbutil as dbutil
+ragit/libs/impl/chunks_mgr.py:import ragit.libs.impl.embeddings_retriever as embeddings_retriever
+ragit/libs/impl/chunks_mgr.py:import ragit.libs.impl.splitter as splitter
+ragit/libs/impl/chunks_mgr.py:import ragit.libs.impl.embeddings_info as embeddings_info
+ragit/libs/impl/metrics.py:import ragit.libs.common as common
+ragit/libs/impl/metrics.py:import ragit.libs.impl.chunks_mgr as chunks_mgr
+ragit/libs/impl/metrics.py:import ragit.libs.impl.pdf_preprocessor as pdf_processor
+ragit/libs/impl/pdf_preprocessor.py:import ragit.libs.common as common
+ragit/libs/impl/pdf_preprocessor.py:import ragit.libs.sanitizer as sanitizer
+ragit/libs/impl/query_executor.py:import ragit.libs.common as common
+ragit/libs/impl/query_executor.py:import ragit.libs.impl.vdb_factory as vector_db
+ragit/libs/impl/tests/test_chunks_mgr.py:import ragit.libs.common as common
+ragit/libs/impl/tests/test_chunks_mgr.py:import ragit.libs.dbutil as dbutil
+ragit/libs/impl/tests/test_chunks_mgr.py:import ragit.libs.impl.chunks_mgr as chunks_mgr
+ragit/libs/impl/tests/test_doc_splitter.py:import ragit.libs.common as common
+ragit/libs/impl/tests/test_doc_splitter.py:import ragit.libs.impl.splitter as splitter
+ragit/libs/impl/tests/test_embeddings_retriever.py:import ragit.libs.impl.embeddings_retriever as embeddings_retriever
+ragit/libs/impl/tests/test_embeddings_retriever.py:import ragit.libs.common as common
+ragit/libs/impl/tests/test_pdf_preprocessor.py:import ragit.libs.impl.pdf_preprocessor as pdf_preprocessor
+ragit/libs/impl/tests/test_pdf_preprocessor.py:import ragit.libs.common as common
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    pdf_path = "/home/vagrant/ragit-data/dummy/documents/patents.pdf"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    synthetic_dir = "/home/vagrant/ragit-data/dummy/synthetic"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    synthetic_dir = "/home/vagrant/ragit-data/dummy/synthetic"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    pdf_path = "/home/vagrant/ragit-data/dummy/documents/patents.pdf"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    synthetic_dir = "/home/vagrant/ragit-data/dummy/synthetic"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    pdf_path = "/home/vagrant/ragit-data/dummy/documents/patents.pdf"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    synthetic_dir = "/home/vagrant/ragit-data/dummy/synthetic"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    pdf_path = "/home/vagrant/ragit-data/dummy/documents/non-exisiting.pdf"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    path = "/home/vagrant/ragit-data/dummy/synthetic/images/documents/patents/patents_2.png"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    expected = "/home/vagrant/ragit-data/dummy/synthetic/markdowns/documents/patents/patents_2.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    path ='/home/vagrant/ragit-data/dummy/synthetic/images/documents/nested_dir/nested_2/sample1/sample1_2.png'
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    expected ='/home/vagrant/ragit-data/dummy/synthetic/markdowns/documents/nested_dir/nested_2/sample1/sample1_2.md'
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    expected = "/home/vagrant/ragit-data/dummy/synthetic/images/documents/patents"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    fullpath = "/home/vagrant/ragit-data/dummy/documents/patents.pdf"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    expected = "/home/vagrant/ragit-data/dummy/synthetic/markdowns/documents/patents"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    fullpath = "/home/vagrant/ragit-data/dummy/documents/patents.pdf"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data/dummy_6.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data/dummy/junk_9.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data/dummy/xyz/junk_11.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data/dummy/synthetic/junk_13.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data/dummy/synthetic/xyz/junk_15.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data/dummy/synthetic/markdowns/junk_17.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data/dummy/synthetic/markdowns/xyz/junk_19.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data/dummy/synthetic/markdowns/documents/patents/patents_a.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data/dummy/synthetic/markdowns/documents/xyz/patents_22.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data/dummy/junk/markdowns/documents/xyz/xyz_22.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data/dummy/synthetic/markdowns/xyz/xyz_22.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:        markdown = "/home/vagrant/ragit-data/dummy/synthetic/junk/xyz/xyz_22.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    markdown = "/home/vagrant/ragit-data/dummy/synthetic/markdowns/documents/patents/patents_1.md"
+ragit/libs/impl/tests/test_pdf_preprocessor.py:    expected = "/home/vagrant/ragit-data/dummy/documents/patents.pdf", 1
+ragit/libs/impl/tests/test_query_executor.py:import ragit.libs.impl.chunks_mgr as chunks_mgr
+ragit/libs/impl/tests/test_query_executor.py:import ragit.libs.common as common
+ragit/libs/impl/tests/test_query_executor.py:import ragit.libs.dbutil as dbutil
+ragit/libs/impl/tests/test_query_executor.py:import ragit.libs.impl.query_executor as query_executor
+ragit/libs/impl/tests/test_query_executor.py:import ragit.libs.impl.vdb_factory as vector_db
+ragit/libs/impl/tests/test_vdb_factory.py:import ragit.libs.impl.chunks_mgr as chunks_mgr
+ragit/libs/impl/tests/test_vdb_factory.py:import ragit.libs.common as common
+ragit/libs/impl/tests/test_vdb_factory.py:import ragit.libs.dbutil as dbutil
+ragit/libs/impl/tests/test_vdb_factory.py:import ragit.libs.impl.vdb_factory as vector_db
+ragit/libs/impl/vdb_chroma.py:import ragit.libs.impl.vdb_abstract_base as abstract_vector_db
+ragit/libs/impl/vdb_chroma.py:import ragit.libs.impl.embeddings_retriever as embeddings_retriever
+ragit/libs/impl/vdb_factory.py:import ragit.libs.common as common
+ragit/libs/impl/vdb_factory.py:import ragit.libs.impl.vdb_chroma as chroma_vector_db
+ragit/libs/impl/vdb_factory.py:import ragit.libs.impl.vdb_milvus as milvus_vector_db
+ragit/libs/impl/vdb_milvus.py:import ragit.libs.impl.vdb_abstract_base as abstract_vector_db
+ragit/libs/impl/vdb_milvus.py:import ragit.libs.impl.embeddings_retriever as embeddings_retriever
+ragit/libs/rag_mgr.py:import ragit.libs.common as common
+ragit/libs/rag_mgr.py:import ragit.libs.impl.chunks_mgr as chunks_mgr
+ragit/libs/rag_mgr.py:import ragit.libs.impl.metrics as metrics
+ragit/libs/rag_mgr.py:import ragit.libs.impl.pdf_preprocessor as pp
+ragit/libs/rag_mgr.py:import ragit.libs.impl.query_executor as query_executor
+ragit/libs/rag_mgr.py:import ragit.libs.impl.vdb_factory as vector_db
+ragit/libs/rag_mgr.py:    and called ragit-data.
+ragit/libs/rag_mgr.py:    Each RAG collection is managed by a specific directory under the ragit-data
+ragit/libs/rag_mgr.py:    _SHARED_DIR = "ragit-data"
+ragit/libs/samples/db_insertion.py:import ragit.libs.dbutil as dbutil
+ragit/libs/samples/db_insertion.py:import ragit.libs.common as common
+ragit/libs/samples/db_insertion.py:import ragit.libs.rag_mgr as rag_mgr
+ragit/libs/samples/db_insertion.py:_FULLPATH = "/home/vagrant/ragit-data/trivial/" \
+ragit/libs/samples/rag_cleanup.sh:rm -rf $HOME/ragit-data/$1/backups
+ragit/libs/samples/rag_cleanup.sh:rm -rf $HOME/ragit-data/$1/synthetic
+ragit/libs/samples/rag_cleanup.sh:rm -rf $HOME/ragit-data/$1/vectordb
+ragit/libs/tests/test_dbutil.py:import ragit.libs.dbutil as dbutil
+ragit/libs/tests/test_dbutil.py:import ragit.libs.common as common
+ragit/libs/tests/test_rag_manager.py:import ragit.libs.common as common
+ragit/libs/tests/test_rag_manager.py:import ragit.libs.dbutil as dbutil
+ragit/libs/tests/test_rag_manager.py:import ragit.libs.impl.metrics as metrics
+ragit/libs/tests/test_rag_manager.py:import ragit.libs.rag_mgr as rag_mgr
+ragit/libs/tests/test_rag_manager.py:import ragit.libs.impl.query_executor as query_executor
+ragit/libs/tests/test_rag_manager.py:            common.get_home_dir(), "ragit-data", self._RAG_NAME
+ragit/libs/tests/test_sanitizer.py:import ragit.libs.sanitizer as sanitizer
+ragit/libs/tests/test_user_registry.py:import ragit.libs.common as common
+ragit/libs/tests/test_user_registry.py:import ragit.libs.user_registry as user_registry
+ragit/libs/tests/test_user_registry.py:import ragit.libs.impl.query_executor as query_executor
+ragit/libs/tests/test_user_registry.py:        directory where the ragit-data is mapped will look as follows:
+ragit/libs/tests/test_user_registry.py:        /home/vagrant/ragit-data
+ragit/libs/tests/test_user_registry.py:        shared_dir = '/home/some-user/ragit_data'
+ragit/libs/tests/test_user_registry.py:        /root/ragit-data/junk-collection/documents/Vision_Summary.pdf
+ragit/libs/tests/test_user_registry.py:        shared_dir = '/root/ragit_data'
+ragit/libs/tests/test_user_registry.py:            "/home/user/ragit-data",
+ragit/libs/tests/test_user_registry.py:            "/home/user/ragit-data/collection",
+ragit/libs/tests/test_user_registry.py:            "/home/user/ragit-data/collection-name/otherdir/file.txt",
+ragit/libs/tests/test_user_registry.py:            "/home/user/ragit-data/collection-name/docs/file.txt",
+ragit/libs/tests/test_user_registry.py:            "/home/user/ragit-data/another-name/documents/file.txt",
+ragit/libs/tests/test_user_registry.py:            "/home/user/ragit-data/wrong-collection/documents/file.txt",
+ragit/libs/user_registry.py:import ragit.libs.common as common
+ragit/utils/make_backup.sh:COLLECTION_DIR=/home/vagrant/ragit-data/$COLLECTION_NAME
+ragit/utils/restore_backup.py:    ragit_data_dir = "/home/vagrant/ragit-data"
+ragit/utils/restore_backup.py:    assert os.path.isdir(ragit_data_dir), f"Invalid Ragit dir {ragit_data_dir}"
+ragit/utils/restore_backup.py:    result = os.system(f"tar -xzvf {backup_file} -C {ragit_data_dir}")

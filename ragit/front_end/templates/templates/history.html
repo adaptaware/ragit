@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <!-- Dialog element -->
+    <dialog id="editorDialog"></dialog>
+    <div class="main_content">
+        <div class="sidebar">
+            <button id="delete_query_btn" class="action_button disabled">
+                Click here to delete the current query
+            </button>
+            <ul id="question-list">
+                <!-- Questions will be populated here -->
+            </ul>
+        </div>
+
+        <div class="container">
+            <div class="section">
+                <div style="display: flex; margin-bottom: 12px">
+                    <h1>Query</h1>
+                    <span class="meta_data" id="time_ago_span">1 day ago </span>
+                    <span class="meta_data"
+                          id="temperature_span">Temperature </span>
+                    <span class="meta_data" id="matches_count_span">Matches count </span>
+                    <span class="meta_data"
+                          id="max_tokens_span">Maximum tokens </span>
+                    <span class="meta_data">
+                        <button id="save_changes_btn">Save</button>
+                    </span>
+
+                </div>
+                <div class="query" id="query">
+
+                </div>
+
+                <div class="user_reaction_div">
+                    <img id="thumps_up_img" src="/static/bw-thumbs-up-32.png">
+
+                    <img id="thumps_down_img"
+                         src="/static/bw-thumbs-down-32.png">
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 id="response_label">Response</h2>
+                <div class="response" id="response"></div>
+            </div>
+
+            <div class="section">
+                <div id="desired_response_editor" class="editor-container">
+                    <h2 id="response_label">Enter the Desired Response</h2>
+                    <textarea id="correct_response_editor"
+                              placeholder="Enter the desired response here..."
+                              onchange="desired_response_was_changed()"
+                    >
+
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="section chunks_section">
+                <hr style="border-top:8px solid black">
+                <h2>Citations</h2>
+                <div id="chunks"></div>
+            </div>
+
+            <div class="section">
+                <hr style="border-top:8px solid black">
+                <h2>Prompt</h2>
+                <div class="prompt" id="prompt"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            retrieve_queries();
+            window.addEventListener('beforeunload', (e) => {
+                if (_is_changed) {
+                    const confirmationMessage = 'You have unsaved changes. Are you sure you want to leave?';
+                    e.returnValue = confirmationMessage;
+                    return confirmationMessage;
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

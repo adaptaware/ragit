@@ -1,0 +1,349 @@
+body {
+    margin: 0 auto;
+    padding: 20px;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    font-size: larger;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    border-color: black;
+    border-width: 2px;
+    width: 1400px;
+}
+
+.search-box {
+    width: 90%;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    margin-top: 0.6em;
+    margin-left: 8px;
+    margin-bottom: 12px;
+    background-color: #e9eef6;
+}
+
+.search-button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
+    border-radius: 5px;
+}
+
+
+.history_qa {
+    margin-bottom: .4em;
+    background-color: #f5e1e1;
+    padding: 0.5em;
+}
+
+.question_mark_img {
+    margin-right: 1.2em;
+    border-radius: 50%;
+    background-color: #e9eef6;
+    width: 50px;
+    height: 50px;
+}
+
+.top_bar {
+    background-color: #CBC7C1;
+    /*clear: left;*/
+    width: 100%;
+    height: 36px;
+    position: relative;
+    padding-top: 8px;
+    text-align: center;
+}
+
+
+#logo {
+    float: left;
+}
+
+#create_new_user_table {
+    margin-bottom: 2em;
+}
+
+.history {
+    border: 0;
+    border-radius: 5px;
+    padding: 10px;
+    max-height: 900px;
+    overflow-y: scroll;
+}
+
+#historyList {
+    width: 90%;
+    height: 900px;
+    margin-bottom: 1em;
+}
+
+.chat_message {
+    border: 0;
+    margin: 2em 0.2em 3em 2em;
+    padding: 0.1em 0.2em 0.1em 0.2em;
+}
+
+.chat_question {
+    padding: 0.2em;
+    text-align: left;
+    margin-bottom: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-right: 2em;
+}
+
+.chat_answer {
+    padding: 0.6em;
+}
+
+.chat_vote {
+    padding: 0.8px;
+    margin-top: 6px;
+    padding-top: 6px;
+    padding-left: 6px;
+    margin-left: 55px;
+}
+
+.search_section {
+    display: flex;
+    margin: 0 auto;
+    width: 1100px;
+    background-color: #e9eef6;
+    padding-top: 12px;
+    padding-bottom: 14px;
+    border-radius: 25px;
+}
+
+.control_container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input[type="number"] {
+    width: 80px; /* Adjust width as needed */
+}
+
+.slider_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2px;
+}
+
+.top_pane {
+    width: 100%;
+    background: #007BFF;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.top_pane h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Styles for the Admin page. */
+#stats_table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#stats_table th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.admin_button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.admin_button:hover {
+    background-color: #3e8e41;
+}
+
+.user_input_button {
+    margin: 12px;
+}
+
+.selected_button {
+    height: 30px;
+    width: 30px;
+}
+
+/* Styles for the navigation bar. */
+
+.navigation_container {
+    background-color: #333;
+    overflow: hidden;
+}
+
+.navigation_container ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+.navigation_container ul li {
+    padding: 14px 20px;
+    list-style: none;
+}
+
+.navigation_container ul li a {
+    text-decoration: none;
+    color: white;
+    display: block;
+    text-align: center;
+}
+
+.navigation_container ul li a:hover {
+    background-color: #575757;
+}
+
+.navigation_container ul li.set_active_page a {
+    color: #ff9100;
+    pointer-events: none;
+    cursor: not-allowed;
+    font-weight: bold;
+    text-decoration: underline;
+    background-color: #696262;
+    padding-left: 12px;
+    padding-right: 6px;
+}
+
+
+/* ********************************************* */
+
+form {
+    border: 2px solid #333;
+    margin: 20px;
+    padding: 10px;
+    width: 500px;
+
+}
+
+/* Two divs side by side. */
+.two_div_container {
+    display: flex;
+}
+
+.two_div_container .left_div {
+    margin-right: 16px;
+    flex: 0 0 auto;
+}
+
+.two_div_container .left_div img {
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+}
+
+.two_div_container .right_div {
+    margin-left: 16px;
+    text-align: left;
+    flex: 0 0 auto;
+}
+
+
+.fixed-bottom-div {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user_reaction_div {
+    padding-top: 12px;
+}
+
+/* *************** The Style for the desired Response Text Box ************ */
+
+.editor-container {
+    width: 100%;
+    text-align: center;
+    background: #eee;
+    padding-top: 8px;
+    padding-bottom: 38px;
+}
+
+.editor-container textarea {
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    font-family: 'Courier New', Courier, monospace;
+    resize: none;
+    overflow: auto;
+    transition: border-color 0.3s;
+    width: 90%;
+    height: 200px;
+}
+
+.editor-container textarea:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+.editor-container.hide_it {
+    visibility: hidden;
+    height: 0;
+}
+
+.editor-container.show_it {
+    visibility: visible;
+    height: 300px;
+}
+
+.save_changes_btn_style {
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 100px;
+}
+
+.save_changes_btn_style.show_it {
+    visibility: visible;
+}
+
+.save_changes_btn_style.hide_it {
+    visibility: hidden;
+}

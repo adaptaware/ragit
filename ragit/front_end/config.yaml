@@ -1,0 +1,4 @@
+# Defines the configuration settings for the Ragit application for dementia.
+
+web_service:
+  name: ragit
