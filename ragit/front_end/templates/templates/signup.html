@@ -1,23 +1,90 @@
 {% extends "base.html" %}
 {% block content %}
+
+    <style>
+        table {
+            margin: 20px 0;
+            border-collapse: collapse;
+            border: none;
+        }
+
+        td {
+            padding: 10px;
+            vertical-align: middle;
+            border: none;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ccc;
+            margin: 20px 0;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
     <h2>Create New User</h2>
-    <form method="post">
+    <form method="post" class="form-container">
         <table id="create_new_user_table">
             <tr>
-                <td><label for="username">Username:</label></td>
+                <td><label for="username">Username</label></td>
                 <td><input type="text" id="user_name" name="user_name"></td>
             </tr>
             <tr>
-                <td><label for="password">Password:</label></td>
+                <td><label for="password">Password</label></td>
                 <td><input type="password" id="password" name="password"></td>
             </tr>
             <tr>
-                <td><label for="email">Email:</label></td>
+                <td><label for="email">Email</label></td>
                 <td><input type="email" id="email" name="email"></td>
             </tr>
         </table>
 
         <input type="submit" value="Submit">
-        <hr>
     </form>
 {% endblock %}
