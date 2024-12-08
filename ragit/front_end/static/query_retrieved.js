@@ -20,10 +20,25 @@ let conversationHistory = [];
  */
 function make_query() {
     const userQuery = document.getElementById("userQuery").value;
-    const temperature = document.getElementById("temperature").value;
-    const max_tokens = document.getElementById("max_tokens").value;
-    const matches_count = document.getElementById("matches_count").value;
-    debugger
+
+    let temperature = 0.4;
+    let max_tokens = 2000;
+    let matches_count = 6;
+
+    const temperature_element = document.getElementById("temperature").value;
+    if (temperature_element){
+        temperature = temperature_element.value;
+    }
+
+    const max_tokens_element = document.getElementById("max_tokens").value;
+    if (max_tokens_element) {
+        max_tokens = max_tokens_element.value;
+    }
+
+    const matches_count_element = document.getElementById("matches_count").value;
+    if (matches_count_element) {
+        matches_count = matches_count_element.value;
+    }
 
     document.body.style.cursor = 'wait';
     $.ajax({
