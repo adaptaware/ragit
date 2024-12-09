@@ -2,7 +2,7 @@
 <img src="ragit/front_end/static/ragit.jpeg"  width="100" height="100">
 </p>
 
-[![Twitter](https://img.shields.io/twitter/url/https/twitter.com/dev_ragit.svg?style=social&label=Follow%20%40cloudposse)](https://twitter.com/dev_ragit)
+[![Twitter](https://img.shields.io/twitter/url/https/twitter.com/dev_ragit.svg?style=social&label=Follow%20%40dev_ragit)](https://twitter.com/dev_ragit)
 [![RAGit](https://img.shields.io/badge/RAGit-Chat%20with%20Ragit-green?labelColor=blue&style=flat&link=https://adaptaware.org)](https://adaptaware.org)
 
 
