@@ -4,8 +4,8 @@
 
 # Table of Contents
 
-- [What is RAGit](#-what-is-ragit)
-- [Development Environment](#-development-environment)
+- [What is RAGit](#what-is-ragit)
+- [Development Environment](#development-environment)
 - [Running RAGit using docker](#running-ragit-using-docker)
 - [RAG Collection](#rag-collection)
 - [The env file for Docker](#the-env-file-for-docker)
