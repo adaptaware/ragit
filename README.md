@@ -22,11 +22,10 @@
 
 # What is RAGit
 
-Welcome to the official documentation for **RAGit**, an open-source framework
-crafted to simplify the development and management of Retrieval-Augmented
-Generation (RAG) solutions. RAGit abstracts the complexities of data handling,
-model selection, and infrastructure setup, allowing developers to focus on
-application logic and customization.
+Welcome to the official documentation for **RAGit**, an open-source framework designed to streamline the development and management of Retrieval-Augmented Generation (RAG) solutions. RAGit eliminates the complexities associated with data handling, model selection, and infrastructure setup, empowering developers to concentrate on application logic and customization. 
+
+Whether you're working for a small to medium-sized business or seeking a personal solution for creating custom chatbots, RAGit offers a versatile platform to meet your needs. It supports document integration through a command-line interface capable of handling various Large Language Models (LLMs) and vector databases. Meanwhile, the intuitive, web-based front end ensures a user-friendly experience for deploying and managing your applications.
+
 
 The core values and principles behind RAGit can be summarized as follows:
 
