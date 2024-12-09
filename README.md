@@ -1,6 +1,17 @@
 <p align="center">
 <img src="ragit/front_end/static/ragit.jpeg"  width="100" height="100">
 </p>
+<i>HTML image</i>
+
+<div align="center">
+    <img src="https://adaptaware.org/" alt="Ragit Chatbot" title="Ragit Chatbot" width="400">
+</div>
+<i>Markdown image</i>
+
+<div align="center">
+<img src="https://adaptaware.org/" alt="Ragit Chatbot">
+
+</div>
 
 # Table of Contents
 
