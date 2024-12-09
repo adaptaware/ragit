@@ -25,17 +25,17 @@ function make_query() {
     let max_tokens = 2000;
     let matches_count = 6;
 
-    const temperature_element = document.getElementById("temperature").value;
+    const temperature_element = document.getElementById("temperature");
     if (temperature_element){
         temperature = temperature_element.value;
     }
 
-    const max_tokens_element = document.getElementById("max_tokens").value;
+    const max_tokens_element = document.getElementById("max_tokens");
     if (max_tokens_element) {
         max_tokens = max_tokens_element.value;
     }
 
-    const matches_count_element = document.getElementById("matches_count").value;
+    const matches_count_element = document.getElementById("matches_count");
     if (matches_count_element) {
         matches_count = matches_count_element.value;
     }
