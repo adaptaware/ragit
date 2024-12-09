@@ -6,6 +6,7 @@
 [![RAGit](https://img.shields.io/badge/RAGit-Chat%20with%20Ragit-green?labelColor=blue&style=flat&link=https://adaptaware.org)](https://adaptaware.org)
 [![Docker](https://img.shields.io/badge/Docker-Front%20End-green?labelColor=blue&style=flat&link=https://hub.docker.com/repository/docker/adaptaware/ragit/general)](https://hub.docker.com/repository/docker/adaptaware/ragit/general)
 [![Docker](https://img.shields.io/badge/Docker-Back%20End-green?labelColor=blue&style=flat&link=https://hub.docker.com/repository/docker/adaptaware/ragit-back-end/general)](https://hub.docker.com/repository/docker/adaptaware/ragit-back-end/general)
+[![Licence](https://img.shields.io/badge/Licence-GNU%20v3.0-green?labelColor=blue&style=flat&link=https://github.com/adaptaware/ragit/blob/main/LICENSE)](https://github.com/adaptaware/ragit/blob/main/LICENSE)
 
 
 # Table of Contents
