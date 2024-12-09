@@ -2,7 +2,7 @@
 <img src="ragit/front_end/static/ragit.jpeg"  width="100" height="100">
 </p>
 
-[![RAGit chatbot](https://img.shields.io/badge/RAGit%20chatbot-Chat%20with%20Ragit-green?labelColor=blue&style=flat&link=adaptaware.org)](adaptaware.org)
+[![RAGit](https://img.shields.io/badge/RAGit-Chat%20with%20Ragit-green?labelColor=blue&style=flat&link=https://adaptaware.org)](https://adaptaware.org)
 
 
 # Table of Contents
