@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ragit</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/light_style.css">
+    <link rel="stylesheet" href="/static/history_style.css">
+    <script src="/static/query_retrieved_light.js"></script>
+    <script src="/static/history.js"></script>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+    <script>
+        // Set the name of the page (CHAT, HISTORY or ADMIN)
+        const PAGE_NAME = "{{ page_name }}";
+    </script>
+</head>
+<body>
+
+{% block content %}
+{% endblock %}
+
+<script>
+</script>
+</body>
+</html>

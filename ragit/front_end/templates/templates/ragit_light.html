@@ -1,0 +1,30 @@
+{% extends "base_light.html" %}
+{% block content %}
+
+<template id="question_and_answer" >
+    <div class="question_and_answer_div" >
+        <div class="question">
+            <p>{question_txt}</p>
+            </div>
+        <div class="answer">
+            <p>{answer_txt}</p>
+        </div>
+    </div>
+</template>
+
+<div class="history" id="historyList"></div>
+
+<div class="fixed-bottom-div">
+    <div class="search_section">
+        <input type="text" class="search-box" id="userQuery"
+               placeholder="Enter your question here">
+        <button class="search-button" onclick="make_query()">Ask</button>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+            load_recent_chats();
+        }
+    )
+</script>
+{% endblock %}

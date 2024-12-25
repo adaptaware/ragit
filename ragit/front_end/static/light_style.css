@@ -1,0 +1,267 @@
+body {
+    margin: 0 auto;
+    padding: 20px;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    font-size: larger;
+    /*background: #3c3f41*/
+    background: #383434
+}
+
+.search-box {
+    width: 90%;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    margin-top: 0.6em;
+    margin-left: 8px;
+    margin-bottom: 12px;
+    background-color: #e9eef6;
+}
+
+.chat_message {
+    background-color: #ffffff;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    margin-left: 10px;
+    border-radius: 25px;
+}
+
+.search-button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
+    border-radius: 5px;
+}
+
+
+.question_mark_img {
+    margin-right: 1.2em;
+    border-radius: 50%;
+    background-color: #e9eef6;
+    width: 50px;
+    height: 50px;
+}
+
+.c111ontainer {
+    display: flex;
+    justify-content: center; /* Centers the paragraph horizontally */
+    padding: 20px;
+    margin: 0 auto; /* Centers the container */
+    width: 100%; /* Full width of the screen */
+    box-sizing: border-box; /* Includes padding in the width calculation */
+}
+
+.question_and_answer_div {
+    padding: 12px;
+    border-radius: 25px;
+}
+
+.question {
+    background-color: #f0f4f9;
+    text-align: right;
+    border-radius: 25px;
+}
+
+
+.chat_question {
+    padding: 0.2em;
+    text-align: left;
+    margin-bottom: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-right: 2em;
+}
+
+.answer {
+    background-color: #ffffff;
+    margin: 0 auto;
+    width: 98%;
+    padding-left: 12px;
+    border-radius: 25px;
+}
+
+.chat_vote {
+    padding: 0.8px;
+    margin-top: 6px;
+    padding-top: 6px;
+    padding-left: 6px;
+    margin-left: 55px;
+}
+
+.history {
+    border: 0;
+    border-radius: 5px;
+    padding: 10px;
+    overflow-y: scroll;
+    color: #101046;
+    margin: 0 auto;
+    font-family: Andale Mono, monospace;
+    font-size: 16px;
+}
+
+.search_section {
+    display: flex;
+    margin: 0 auto;
+    width: 80%;
+    background-color: #e9eef6;
+    padding-top: 12px;
+    padding-bottom: 14px;
+    border-radius: 25px;
+}
+
+.control_container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input[type="number"] {
+    width: 80px; /* Adjust width as needed */
+}
+
+.slider_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2px;
+}
+
+
+#stats_table th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+
+.user_input_button {
+    margin: 12px;
+}
+
+.selected_button {
+    height: 30px;
+    width: 30px;
+}
+
+
+/* ********************************************* */
+
+form {
+    border: 2px solid #333;
+    margin: 20px;
+    padding: 10px;
+    width: 500px;
+
+}
+
+/* Two divs side by side. */
+.two_div_container {
+    display: flex;
+}
+
+.two_div_container .left_div {
+    margin-right: 16px;
+    flex: 0 0 auto;
+}
+
+.two_div_container .left_div img {
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+}
+
+.two_div_container .right_div {
+    display: flex;
+    justify-content: center; /* Centers the paragraph horizontally */
+    padding: 20px;
+    margin: 0 auto; /* Centers the container */
+    width: 100%; /* Full width of the screen */
+    box-sizing: border-box; /* Includes padding in the width calculation */
+}
+
+p {
+    padding: 10px; /* Padding for better spacing */
+    margin: 0 auto; /* Center the paragraph within its parent */
+    box-sizing: border-box; /* Include padding in the width calculation */
+    overflow-wrap: break-word; /* Break words that are too long */
+    line-height: 1.6; /* Improve readability with better line spacing */
+
+}
+
+
+.fixed-bottom-div {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user_reaction_div {
+    padding-top: 12px;
+}
+
+
+/**********************/
+
+pre, code {
+    border-radius: 3px;
+    padding: 5px 10px;
+    font-family: 'Courier New', monospace;
+    background-color: #f0f4f9;
+}
+
+/* Style for inline code */
+code {
+    padding: 12px;
+    background-color: #f0f4f9;
+}
+
+/* Style for markdown headers */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+/* Style for links */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Style for blockquotes */
+blockquote {
+    border-left: 3px solid #ccc;
+    padding-left: 10px;
+    margin-left: 0;
+    color: #666;
+}
+
+/* Style for lists */
+ul, ol {
+    padding-left: 20px;
+}
