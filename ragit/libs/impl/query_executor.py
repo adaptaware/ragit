@@ -9,7 +9,7 @@ import ragit.libs.common as common
 import ragit.libs.impl.vdb_factory as vector_db
 
 #DEFAULT_MODEL = "gpt-3.5-turbo"
-DEFAULT_MODEL = "gpt-4-turbo"
+DEFAULT_MODEL = "gpt-4o"
 _DEFAULT_TEMPERATURE = 0.2
 _DEFAULT_MAX_TOKENS = 2000
 _DEFAULT_CLOSES_MATCHES_COUNT = 3
