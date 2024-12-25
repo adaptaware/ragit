@@ -184,6 +184,41 @@ def web_handler(handler_func):
     return _inner
 
 
+class RagitLightHandler:
+    """Implements the light handlers."""
+
+    @web_handler
+    async def main_page_handler(self, request):
+        """Displays the main page.
+
+        :param request: The web request.
+        """
+        try:
+            auth_token = request.cookies.get('ragit_auth_token')
+            user_name = request.cookies.get('user_name')
+            Globals.validate_token(auth_token, user_name)
+        except AuthenticationError:
+            return web.HTTPFound('/login')
+        else:
+            template = _JINJA_ENV.get_template('ragit_light.html')
+            collection_name = Globals.rag_manager.get_rag_collection_name()
+            txt = template.render(
+                host=request.host,
+                collection_name=collection_name,
+                page_name="CHAT",
+                is_admin=Globals.is_admin
+
+            )
+            response = web.Response(
+                body=txt.encode(),
+                content_type='text/html'
+            )
+            response.set_cookie('ragit_auth_token', auth_token)
+            response.set_cookie('user_name', user_name)
+            logger.info("Serving main page.")
+            return response
+
+
 class RagitHandler:
     """Implements all the web handlers used from the service."""
 
@@ -681,6 +716,8 @@ def run():
     initialize()
     app = web.Application()
     ragit_handler = RagitHandler()
+    ragit_light_handler = RagitLightHandler()
+
     app.add_routes(
         [
             web.get('/', ragit_handler.default_handler),
@@ -701,8 +738,8 @@ def run():
                     ragit_handler.speechify_handler),
             web.get('/recentchats/{count}', ragit_handler.recent_chats_handler),
             web.put('/updateuserinteraction',
-                     ragit_handler.update_user_reaction)
-
+                    ragit_handler.update_user_reaction),
+            web.get('/light', ragit_light_handler.main_page_handler),
         ]
     )
 
