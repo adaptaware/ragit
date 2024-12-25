@@ -24,8 +24,8 @@ body {
     background-color: #ffffff;
     margin-top: 12px;
     margin-bottom: 12px;
-    border-radius: 5px;
     margin-left: 10px;
+    border-radius: 25px;
 }
 
 .search-button {
@@ -65,11 +65,13 @@ body {
 
 .question_and_answer_div {
     padding: 12px;
+    border-radius: 25px;
 }
 
 .question {
     background-color: #f0f4f9;
     text-align: right;
+    border-radius: 25px;
 }
 
 
@@ -87,6 +89,7 @@ body {
     margin: 0 auto;
     width: 98%;
     padding-left: 12px;
+    border-radius: 25px;
 }
 
 .chat_vote {
