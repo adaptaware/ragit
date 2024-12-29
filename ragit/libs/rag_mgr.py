@@ -167,7 +167,7 @@ class RagManager:
 
         :raises MyGenAIException
         """
-        question += " (do not consider upper - lower case in string matching "
+        question += " (do not consider upper - lower case in string matching) "
         return query_executor.query(question, k, temperature, max_tokens)
 
     def get_base_dir(self):
