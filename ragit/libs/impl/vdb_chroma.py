@@ -111,6 +111,6 @@ class ChromaVectorDb(abstract_vector_db.AbstractVectorDb):
                                  ):
             source = meta.get("source")
             page = meta.get("page")
-            matches.append((txt, distance, source, page))
+            matches.append((txt, 1. - distance, source, page))
 
         return matches
