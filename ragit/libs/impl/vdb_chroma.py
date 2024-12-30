@@ -94,6 +94,7 @@ class ChromaVectorDb(abstract_vector_db.AbstractVectorDb):
         """
         assert self._chroma_client, "Chroma Vector Collection is not open."
 
+        query = query + " (do not consider upper lower case in the embeddings)"
         query_embedding = embeddings_retriever.get_embeddings(query)
         collection = self._chroma_client.get_or_create_collection(
             self.get_collection_name()

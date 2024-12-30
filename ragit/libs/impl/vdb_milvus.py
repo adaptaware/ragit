@@ -89,6 +89,7 @@ class MilvusVectorDb(abstract_vector_db.AbstractVectorDb):
         :param int k: The number of matches to return.
         """
         assert self._milvus_client, "Milvus Vector Collection is not open."
+        query = query + " (do not consider upper lower case in the embeddings)"
         e = embeddings_retriever.get_embeddings(query)
         search_res = self._milvus_client.search(
             collection_name=self.get_collection_name(),
