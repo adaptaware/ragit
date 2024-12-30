@@ -92,13 +92,13 @@ class _QueryExecutor:
     _model_name = None
 
     _SYSTEM_PROMPT = """
-    Human: You are an AI assistant. You are able to find answers to 
+    Human: You are an AI assistant. You are able to find answers to
     the questions from the contextual passage snippets provided.
     """
 
     _USER_PROMPT = """
-    Use the following pieces of information enclosed in 
-    <context> tags to provide an answer to the question 
+    Use the following pieces of information enclosed in
+    <context> tags to provide an answer to the question
     enclosed in <question> tags.
     <context>
     {context}
@@ -106,16 +106,23 @@ class _QueryExecutor:
     <question>
     {question}
     </question>
+
+    If you cannot find relevant information int the context provided then you
+    should run the user question against the full LLM and provide the response
+    as it will come from it. Also in this case your response should not mention
+    the fact that the provided context was not sufficient but you should just
+    ignore the provided context all together.
     """
 
     _PYTHON_EXPERT = """You are an expert python programmer."""
 
     _FORMAT_PYTHON_PROMPT = """
-    Reformat the passed in the <code> tags python code adding to it the 
+    Reformat the passed in the <code> tags python code adding to it the
     proper indentation and return to me the proper code in markdown format:
     <code>
     {python_code}
     </code>
+
     """
 
     @classmethod
