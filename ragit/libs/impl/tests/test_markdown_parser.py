@@ -287,3 +287,28 @@ def test_adding_lines_to_table():
     retrieved_text = t.get_table()
     retrieved_lines = retrieved_text.split("\n")
     assert retrieved_lines == lines
+
+def test_populate_root():
+    txt = """
+    # Header1 
+    this is a test
+    multi-line
+    ## Header 1.2
+    Belongs to header 1.2..
+    ### Header 1.3
+    Belongs to header 1.3.. 
+    |name|age|
+    |x|1|
+    # Header2 
+    Belongs to header 2
+    # Header3 
+    # Header4 
+    |name|age|
+    |x|1|
+    """
+    root = markdown_parser.Root()
+    for line in txt.split("\n"):
+        root.add_line(line)
+
+    for n in root.get_nodes():
+        print(n)
