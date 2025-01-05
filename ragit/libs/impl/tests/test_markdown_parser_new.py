@@ -82,7 +82,11 @@ def test_node_4():
         "|name|age|",
         "|x|1|",
         "|y|2|",
-        "# Header 2",
+        "## Header 1.1",
+        "|x|1|",
+        "|y|2|",
+        "## Header 2",
+        "# Header 3",
     ]
     root = mp.Node("root")
 
@@ -96,6 +100,11 @@ def test_node_4():
 ---- ---- |name|age|
 ---- ---- |x|1|
 ---- ---- |y|2|
----- Header 2
+---- ---- Header 1.1
+---- ---- ---- Table
+---- ---- ---- |x|1|
+---- ---- ---- |y|2|
+---- ---- Header 2
+---- Header 3
     """
     assert retrieved.strip() == expected.strip()
