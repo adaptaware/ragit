@@ -21,7 +21,8 @@ def node_factory(line):
         return H3Node(stripped[4:])
     elif stripped.startswith("|") and stripped.endswith("|"):
         return Table(stripped)
-    assert False, f"Invalid line: {line}"
+    else:
+        return Text(stripped)
 
 
 class Node:
@@ -61,6 +62,8 @@ class Node:
         if self._tail.can_add(other):
             if isinstance(self._tail, Table):
                 self._tail.merge(other)
+            elif isinstance(self._tail, Text):
+                self._tail.merge(other)
             else:
                 self._tail._children.append(other)
                 other._parent = self._tail
@@ -71,22 +74,22 @@ class Node:
             parent._add_node(other)
 
     def can_add(self, other):
-        return isinstance(other, (H1Node, H2Node, H3Node, Table))
+        return isinstance(other, (H1Node, H2Node, H3Node, Table, Text))
 
 
 class H1Node(Node):
     def can_add(self, other):
-        return isinstance(other, (H2Node, H3Node, Table))
+        return isinstance(other, (H2Node, H3Node, Table, Text))
 
 
 class H2Node(Node):
     def can_add(self, other):
-        return isinstance(other, (H3Node, Table))
+        return isinstance(other, (H3Node, Table, Text))
 
 
 class H3Node(Node):
     def can_add(self, other):
-        return isinstance(other, (Table,))
+        return isinstance(other, (Table, Text))
 
 
 class LineContainer:
@@ -101,6 +104,11 @@ class LineContainer:
     def to_str(self):
         return '\n'.join(self._lines)
 
+
+class Table(LineContainer):
+    def __repr__(self):
+        return '\n'.join(self._lines)
+
     def to_lines(self, depth=0):
         lines = []
         prefix = '---- ' * depth
@@ -109,14 +117,31 @@ class LineContainer:
             lines.append(prefix + l)
         return lines
 
-class Table(LineContainer):
-    def __repr__(self):
-        return '\n'.join(self._lines)
-
     def can_add(self, other):
         if isinstance(other, Table):
             return True
         elif isinstance(other, str):
             other = other.strip()
             return other.startswith("|") and other.endswith("|")
+        return False
+
+
+class Text(LineContainer):
+    def __repr__(self):
+        return '\n'.join(self._lines)
+
+    def to_lines(self, depth=0):
+        lines = []
+        prefix = '---- ' * depth
+        lines.append(prefix + "Text")
+        for l in self._lines:
+            lines.append(prefix + l)
+        return lines
+
+    def can_add(self, other):
+        if isinstance(other, Text):
+            return True
+        elif isinstance(other, str):
+            other = other.strip()
+            return not other.startswith("|") and not other.endswith("|")
         return False

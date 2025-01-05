@@ -32,8 +32,11 @@ def test_node_2():
         root.add(c)
 
     retrieved = root.to_str()
-    print("******")
-    print(retrieved)
+    expected = """root
+---- Header 1
+---- Header 2 
+    """
+    assert retrieved.strip() == expected.strip()
 
 
 def test_node_3():
@@ -57,8 +60,6 @@ def test_node_3():
         root.add(c)
 
     retrieved = root.to_str()
-    print("******")
-    print(retrieved)
     expected = """root
 ---- # Header 1
 ---- ---- ## Header 2
@@ -83,8 +84,8 @@ def test_node_4():
         "|x|1|",
         "|y|2|",
         "## Header 1.1",
-        "|x|1|",
-        "|y|2|",
+        "|a|1|",
+        "|b|2|",
         "## Header 2",
         "# Header 3",
     ]
@@ -102,9 +103,52 @@ def test_node_4():
 ---- ---- |y|2|
 ---- ---- Header 1.1
 ---- ---- ---- Table
----- ---- ---- |x|1|
----- ---- ---- |y|2|
+---- ---- ---- |a|1|
+---- ---- ---- |b|2|
 ---- ---- Header 2
 ---- Header 3
+    """
+    assert retrieved.strip() == expected.strip()
+
+def test_node_5():
+    lines = [
+        "# Header 1",
+        "|name|age|",
+        "|x|1|",
+        "|y|2|",
+        "## Header 1.1",
+        "this is text",
+        "fields and lines",
+        "|name|age|",
+        "|x|1|",
+        "|y|2|",
+        "# Header 2",
+        "this is text about",
+        "some topic ",
+    ]
+    root = mp.Node("root")
+
+    for c in lines:
+        root.add(c)
+
+    retrieved = root.to_str()
+    expected = """root
+---- Header 1
+---- ---- Table
+---- ---- |name|age|
+---- ---- |x|1|
+---- ---- |y|2|
+---- ---- Header 1.1
+---- ---- ---- Text
+---- ---- ---- this is text
+---- ---- ---- fields and lines
+---- ---- ---- Table
+---- ---- ---- |name|age|
+---- ---- ---- |x|1|
+---- ---- ---- |y|2|
+---- Header 2
+---- ---- Text
+---- ---- this is text about
+---- ---- some topic
     """
     assert retrieved.strip() == expected.strip()
