@@ -30,8 +30,11 @@ class Node:
         self._parent = None
         self._caption = caption
 
-    def _reset_tail(self):
-        self._tail = self
+    def set_tail(self, new_tail):
+        if self._caption == "root":
+            self._tail = new_tail
+        else:
+            self._parent.set_tail(new_tail)
 
     def __repr__(self):
         return self._caption
@@ -56,10 +59,10 @@ class Node:
         if self._tail.can_add(other):
             self._tail._children.append(other)
             other._parent = self._tail
-            self._tail = other
+            self.set_tail(other)
         else:
             parent = self._tail._parent
-            parent._reset_tail()
+            self.set_tail(parent)
             parent._add_node(other)
 
     def can_add(self, other):

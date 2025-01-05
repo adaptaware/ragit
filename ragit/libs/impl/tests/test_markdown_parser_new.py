@@ -40,6 +40,10 @@ def test_node_3():
         "### ### Header 3",
         "## ## Header 4",
         "### ### Header 5",
+        "### ### Header 5.1",
+        "### ### Header 5.2",
+        "## ## Header 6",
+        "# # Header 7",
     ]
     root = mp.Node("root")
 
