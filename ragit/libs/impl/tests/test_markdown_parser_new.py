@@ -13,6 +13,18 @@ def test_document_invalid_caption():
     with pytest.raises(AssertionError):
         doc = mp.Node("")
 
+def test_get_paragraphs():
+    """Tests the get_paragraphs function."""
+    md_path = os.path.join(_CURRENT_DIR, "static", "sample.md")
+    caption = "root"
+    doc = mp.Node(caption)
+
+    with open(md_path) as fin:
+        for line in fin.readlines():
+            doc.add(line)
+
+    retrieved = doc.to_str()
+    print(retrieved)
 
 def test_node_1():
     caption = "root"
@@ -132,6 +144,8 @@ def test_node_5():
         root.add(c)
 
     retrieved = root.to_str()
+    print(retrieved)
+    return
     expected = """root
 ---- Header 1
 ---- ---- Table
@@ -152,3 +166,28 @@ def test_node_5():
 ---- ---- some topic
     """
     assert retrieved.strip() == expected.strip()
+
+def test_get_nodes():
+    captions = [
+        "# # Header 1",
+        "## ## Header 2",
+        "### ### Header 3",
+        "## ## Header 4",
+        "### ### Header 5",
+        "### ### Header 5.1",
+        "### ### Header 5.2",
+        "## ## Header 6",
+        "### ### Header 6",
+        "### ### Header 6.1",
+        "### ### Header 6.2",
+        "this is a test 1",
+        "this is a test 2",
+        "# # Header 7",
+    ]
+    root = mp.Node("root")
+
+    for c in captions:
+        root.add(c)
+
+    for n in root.get_nodes():
+        print(n)

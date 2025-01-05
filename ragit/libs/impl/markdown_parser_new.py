@@ -39,12 +39,30 @@ class Node:
         else:
             self._parent.set_tail(new_tail)
 
+    def headers_path(self):
+        return ' '.join(reversed(self._get_header_path()))
+
+    def _get_header_path(self):
+        headers = [self._caption]
+        if self._parent:
+            headers.extend(self._parent._get_header_path())
+        return headers
+
     def __repr__(self):
-        return self._caption
+        return f"{self.__class__.__name__}(caption={self._caption})"
 
     def to_str(self):
         lines = self.to_lines()
         return '\n'.join(lines)
+
+    def get_nodes(self):
+        yield self
+        for node in self._children:
+            if isinstance(node, Node):
+                for n in node.get_nodes():
+                    yield n
+            else:
+                yield node
 
     def to_lines(self, depth=0):
         lines = []
@@ -101,21 +119,25 @@ class LineContainer:
         assert type(other) is type(self)
         self._lines.extend(other._lines)
 
-    def to_str(self):
-        return '\n'.join(self._lines)
-
-
-class Table(LineContainer):
-    def __repr__(self):
-        return '\n'.join(self._lines)
-
     def to_lines(self, depth=0):
         lines = []
         prefix = '---- ' * depth
-        lines.append(prefix + "Table")
+        lines.append(prefix + self.__class__.__name__)
         for l in self._lines:
             lines.append(prefix + l)
         return lines
+
+    def to_str(self):
+        return '\n'.join(self._lines)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(lines={self._lines})"
+
+    def __str__(self):
+        return f"{self.__class__.__name__}(lines={self._lines})"
+
+
+class Table(LineContainer):
 
     def can_add(self, other):
         if isinstance(other, Table):
@@ -127,16 +149,6 @@ class Table(LineContainer):
 
 
 class Text(LineContainer):
-    def __repr__(self):
-        return '\n'.join(self._lines)
-
-    def to_lines(self, depth=0):
-        lines = []
-        prefix = '---- ' * depth
-        lines.append(prefix + "Text")
-        for l in self._lines:
-            lines.append(prefix + l)
-        return lines
 
     def can_add(self, other):
         if isinstance(other, Text):
