@@ -1,222 +1,176 @@
 """Exposes the functionality to parse a markdown file."""
 
-import abc
-import enum
+def iter_markdown(filename):
+    root = Node(Node.ROOT_NAME)
+    with open(filename, 'r') as fin:
+        for line in fin.readlines():
+            root.add(line)
+    for node in root.get_nodes():
+        if isinstance(node, (Text, Table)):
+            yield node
 
+class Node:
 
-class NodeType(enum.IntEnum):
-    """Represents the type of single line (based on its first char.)"""
+    ROOT_NAME = "__markdown__root__"
 
-    ROOT = 0
-    HEADING_1 = 1  # Corresponds to "#"
-    HEADING_2 = 2  # Corresponds to "##"
-    HEADING_3 = 3  # Corresponds to "###"
-    TEXT = 7  # Typical text paragraph
-    CODE_BLOCK = 8  # Corresponds to code fences ```
-    HORIZONTAL_RULE = 9  # Corresponds to "---" or "***" or "___"
-    TABLE = 10  # Markdown tables (start / end with |)
+    def __init__(self, caption):
+        assert caption, "Header caption cannot be empty."
+        self._children = []
+        self._tail = self
+        self._parent = None
+        self._caption = caption
+
+    def _is_root(self):
+        return self._caption == Node.ROOT_NAME
+
+    def set_tail(self, new_tail):
+        if self._is_root():
+            self._tail = new_tail
+        else:
+            self._parent.set_tail(new_tail)
+
+    def headers_path(self):
+        return ' => '.join(reversed(self._get_header_path()))
+
+    def _get_header_path(self):
+        headers = []
+        if not self._is_root():
+            headers.append(self._caption)
+        if self._parent:
+            headers.extend(self._parent._get_header_path())
+        return headers
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(caption={self._caption})"
+
+    def to_str(self):
+        lines = self.to_lines()
+        return '\n'.join(lines)
+
+    def get_nodes(self):
+        yield self
+        for node in self._children:
+            if isinstance(node, Node):
+                for n in node.get_nodes():
+                    yield n
+            else:
+                yield node
+
+    def to_lines(self, depth=0):
+        lines = []
+        lines.append('---- ' * depth + self._caption)
+        for c in self._children:
+            for l in c.to_lines(depth + 1):
+                lines.append(l)
+        return lines
+
+    def add(self, line):
+        new_node = self._make_node(line)
+        self._add_node(new_node)
 
     @classmethod
-    def get_node_type(cls, line):
+    def _make_node(cls, line):
         """Returns the node type for the passed in line.
 
         :param str line: The line of text to get its node type.
 
-        :return: The node type for the passed in line.
-        :rtype: NodeType.
+        :return: The node type and the value of the line.
+        :rtype: Tuple
         """
         stripped = line.strip()
         if stripped.startswith("# "):
-            return NodeType.HEADING_1
+            return H1Node(stripped[2:])
         elif stripped.startswith("## "):
-            return NodeType.HEADING_2
+            return H2Node(stripped[3:])
         elif stripped.startswith("### "):
-            return NodeType.HEADING_3
+            return H3Node(stripped[4:])
         elif stripped.startswith("|") and stripped.endswith("|"):
-            return NodeType.TABLE
-        elif stripped[:3] in ("---", "***", "___"):
-            return NodeType.HORIZONTAL_RULE
+            return Table(stripped)
         else:
-            return NodeType.TEXT
+            return Text(stripped)
 
-
-def make_node(line):
-    node_type = NodeType.get_node_type(line)
-    if node_type == NodeType.HEADING_1:
-        return H1(line)
-    elif node_type == NodeType.HEADING_2:
-        return H2(line)
-    elif node_type == NodeType.HEADING_3:
-        return H3(line)
-    elif node_type == NodeType.TEXT:
-        return TextLine(line)
-    elif node_type == NodeType.TABLE:
-        return TableLine(line)
-    assert False, "Unknown node type"
-
-
-class Component:
-    _parent = None
-
-    def set_parent(self, parent):
-        self._parent = parent
-
-
-class Leaf(Component):
-    _value = None
-
-    def get_value(self):
-        return self._value
-
-
-class TextLine(Leaf):
-    def __init__(self, value):
-        assert NodeType.get_node_type(value) == NodeType.TEXT
-        self._value = value
-
-
-class TableLine(Leaf):
-    def __init__(self, value):
-        assert NodeType.get_node_type(value) == NodeType.TABLE
-        self._value = value
-
-
-class Composite(Component):
-    _children = None
-    _acceptable = None
-    _parent = None
-
-    def __init__(self, *acceptable):
-        self._acceptable = set(acceptable[:])
-        self._children = []
-
-    def get_path(self):
-        if self._parent:
-            if isinstance(self, Header):
-                return self._parent.get_path() + " - " + self.get_header().strip()
+    def _add_node(self, other):
+        if self._tail.can_add(other):
+            if isinstance(self._tail, Table):
+                self._tail.merge(other)
+            elif isinstance(self._tail, Text):
+                self._tail.merge(other)
             else:
-                return self._parent.get_path().strip()
+                self._tail._children.append(other)
+                other._parent = self._tail
+                self.set_tail(other)
         else:
-            return "ROOT"
+            parent = self._tail._parent
+            self.set_tail(parent)
+            parent._add_node(other)
+
+    def can_add(self, other):
+        return isinstance(other, (H1Node, H2Node, H3Node, Table, Text))
 
 
-
-    def is_acceptable(self, component):
-        return type(component) in self._acceptable
-
-    def set_parent(self, parent):
-        self._parent = parent
-
-    def get_parent(self):
-        return self._parent
-
-    def add_child(self, child):
-        assert isinstance(child, Composite)
-        self._children.append(child)
-
-    def get_nodes(self):
-        for n in self._children:
-            yield n
-            if isinstance(n, (H1, H2, H3)):
-                for n1 in n.get_nodes():
-                    yield n.get_path() + "\n" + str(n1) if isinstance(n1, (Text, Table)) else n1
+class H1Node(Node):
+    def can_add(self, other):
+        return isinstance(other, (H2Node, H3Node, Table, Text))
 
 
-class Root(Composite):
-    def __init__(self):
-        super().__init__(H1, H2, H3, Text, Table)
-        self._tail = self
+class H2Node(Node):
+    def can_add(self, other):
+        return isinstance(other, (H3Node, Table, Text))
 
-    def set_parent(self, parent):
-        raise NotImplementedError
 
-    def add_line(self, line):
-        n = make_node(line)
-        self._add_child_node(n)
+class H3Node(Node):
+    def can_add(self, other):
+        return isinstance(other, (Table, Text))
 
-    def _add_child_node(self, n):
-        if self._tail.is_acceptable(n):
-            self._tail.add_child(n)
-            n.set_parent(self._tail)
-            if isinstance(n, (H1, H2, H3, Text, Table)):
-                self._tail = n
-        elif type(n) is TextLine:
-            t = Text()
-            t.add_child(n)
-            self._add_child_node(t)
-        elif type(n) is TableLine:
-            t = Table()
-            t.add_child(n)
-            self._add_child_node(t)
+
+class LineContainer:
+    def __init__(self, line):
+        self._lines = [line]
+        self._parent = None
+
+    def get_headers(self):
+        if isinstance(self._parent, Node):
+            return self._parent.headers_path()
         else:
-            self._tail = self._tail.get_parent()
-            self._add_child_node(n)
+            return "path in not available."
 
+    def merge(self, other):
+        assert type(other) is type(self)
+        self._lines.extend(other._lines)
 
-class Header(Composite):
-    _header = None
+    def to_lines(self, depth=0):
+        lines = []
+        prefix = '---- ' * depth
+        lines.append(prefix + self.__class__.__name__)
+        for l in self._lines:
+            lines.append(prefix + l)
+        return lines
 
-    def __init__(self, header, *acceptable):
-        super().__init__(*acceptable)
-        self._header = header
-
-    def get_header(self):
-        return self._header
-
-    def __str__(self):
-        return f'{self._header}'
-
-
-class H1(Header):
-    def __init__(self, header):
-        super().__init__(header, H2, H3, Text, Table)
-
-
-class H2(Header):
-    def __init__(self, header):
-        super().__init__(header, H3, Text, Table)
-
-
-class H3(Header):
-    def __init__(self, header):
-        super().__init__(header, Text, Table)
-
-
-class Text(Composite):
-    def __init__(self):
-        super().__init__(TextLine)
-
-    def add_child(self, child):
-        assert isinstance(child, TextLine)
-        self._children.append(child)
-
-    def __str__(self):
-        return '\n'.join([c.get_value() for c in self._children])
+    def to_str(self):
+        return '\n'.join(self._lines)
 
     def __repr__(self):
-        return '\n'.join([c.get_value() for c in self._children])
-
-
-class Table(Composite):
-    def __init__(self):
-        super().__init__(TableLine)
-
-    def add_child(self, child):
-        assert isinstance(child, TableLine)
-        self._children.append(child)
+        return f"{self.__class__.__name__}(lines={self._lines})"
 
     def __str__(self):
-        return '\n'.join([c.get_value() for c in self._children])
+        return f"{self.__class__.__name__}(lines={self._lines})"
 
 
-def parse(markdown_path):
-    """Parses the passed in markdown file.
+class Table(LineContainer):
+    def can_add(self, other):
+        if isinstance(other, Table):
+            return True
+        elif isinstance(other, str):
+            other = other.strip()
+            return other.startswith("|") and other.endswith("|")
+        return False
 
-    :returns: The root MarkdownContainer for the passed in markdown file.
-    :rtype MarkdownNode.
-    """
-    root = ContainerNode()
-    with open(markdown_path) as fin:
-        for line in fin.readlines():
-            root.process_line(line)
-    return root
+
+class Text(LineContainer):
+    def can_add(self, other):
+        if isinstance(other, Text):
+            return True
+        elif isinstance(other, str):
+            other = other.strip()
+            return not other.startswith("|") and not other.endswith("|")
+        return False
