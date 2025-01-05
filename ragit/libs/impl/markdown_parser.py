@@ -1,5 +1,6 @@
 """Exposes the functionality to parse a markdown file."""
 
+
 def iter_markdown(filename):
     root = Node(Node.ROOT_NAME)
     with open(filename, 'r') as fin:
@@ -9,8 +10,8 @@ def iter_markdown(filename):
         if isinstance(node, (Text, Table)):
             yield node
 
-class Node:
 
+class Node:
     ROOT_NAME = "__markdown__root__"
 
     def __init__(self, caption):
@@ -43,10 +44,6 @@ class Node:
     def __repr__(self):
         return f"{self.__class__.__name__}(caption={self._caption})"
 
-    def to_str(self):
-        lines = self.to_lines()
-        return '\n'.join(lines)
-
     def get_nodes(self):
         yield self
         for node in self._children:
@@ -55,14 +52,6 @@ class Node:
                     yield n
             else:
                 yield node
-
-    def to_lines(self, depth=0):
-        lines = []
-        lines.append('---- ' * depth + self._caption)
-        for c in self._children:
-            for l in c.to_lines(depth + 1):
-                lines.append(l)
-        return lines
 
     def add(self, line):
         new_node = self._make_node(line)
@@ -138,15 +127,7 @@ class LineContainer:
         assert type(other) is type(self)
         self._lines.extend(other._lines)
 
-    def to_lines(self, depth=0):
-        lines = []
-        prefix = '---- ' * depth
-        lines.append(prefix + self.__class__.__name__)
-        for l in self._lines:
-            lines.append(prefix + l)
-        return lines
-
-    def to_str(self):
+    def get_inner_text(self):
         return '\n'.join(self._lines)
 
     def __repr__(self):
@@ -158,19 +139,9 @@ class LineContainer:
 
 class Table(LineContainer):
     def can_add(self, other):
-        if isinstance(other, Table):
-            return True
-        elif isinstance(other, str):
-            other = other.strip()
-            return other.startswith("|") and other.endswith("|")
-        return False
+        return isinstance(other, Table)
 
 
 class Text(LineContainer):
     def can_add(self, other):
-        if isinstance(other, Text):
-            return True
-        elif isinstance(other, str):
-            other = other.strip()
-            return not other.startswith("|") and not other.endswith("|")
-        return False
+        return isinstance(other, Text)
