@@ -1,0 +1,18 @@
+We calculate our revenue by user geography based on our estimate of the
+geography in which ad impressions are delivered, virtual and digital goods are
+purchased, or consumer hardware products are shipped. We define ARPU as our
+total revenue in a given geography during a given quarter, divided by the
+average of the number of MAUs in the geography at the beginning and end of the
+quarter. While ARPU includes all sources of revenue, the number of MAUs used in
+this calculation only includes users of Facebook and Messenger as described in
+the definition of MAU above. While the share of revenue from users who are not
+also Facebook or Messenger MAUs has grown over time, we estimate that revenue
+from users who are Facebook or Messenger MAUs represents the substantial
+majority of our total revenue. See "Average Revenue Per Person (ARPP)" above
+for our estimates of trends in our monetization of our Family products. The
+geography of our users affects our revenue and financial results because we
+currently monetize users in different geographies at different average rates.
+Our revenue and ARPU in regions such as United States & Canada and Europe are
+relatively higher primarily due to the size and maturity of those online and
+mobile advertising markets. For example, ARPU in 2023 in the United States &
+Canada region was more than 11 times higher than in the Asia-Pacific region.
