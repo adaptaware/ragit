@@ -1,70 +1,67 @@
 """Defines the markdown splitter functionality."""
 
-import openai
+import bisect
+import re
 
 
-def invoke(markdown_txt):
-    prompt = _PROMPT.format(markdown_text=markdown_txt)
-    return _QueryExecutor.invoke(prompt)
+def get_chunks(txt, chunk_size=800):
+    """Splits a text into chunks based on punctuation or size.
 
+    :param str txt: The text to be split into chunks.
 
-class _QueryExecutor:
-    """Manages the LLM session to get a RAG response.
+    :param int chunk_size: The maximum size of each chunk in characters.
 
-    :cvar vector_db.AbstractVectorDb _vdb: The vector database.
-    :cvar OpenAI _openai_client: The OpenAI client to use.
-    :cvar str _model_name: The name of the model to use.
+    :returns: Yields chunks of the text.
+    :rtype: generator.
     """
 
-    _openai_client = None
-    _model_name = "gpt-4o"
+    txt = txt.strip()
+    if not txt:
+        return
 
-    @classmethod
-    def invoke(cls, markdown_text,
-               temperature=0.2, max_tokens=16000):
-        """Executes a query getting a RAG response.
+    txt = re.sub(r'\n+', '\n', txt)
+    separator_indexes = []
 
-        :param str question: The question to ask.
-        :param int k: The number of matches to return.
-        :param float temperature: The temperature to use for the query.
-        :param float max_tokens: The max_tokens to use for the query.
+    for index, c in enumerate(txt):
+        if c in ('.',):
+            separator_indexes.append(index)
 
-        :return: An instance of the QueryResponse.
-        :rtype: QueryResponse
+    if not separator_indexes:
+        # There are no periods.
+        chunk = txt[:chunk_size]
+        yield chunk
+        for chunk in get_chunks(txt[chunk_size:], chunk_size):
+            yield chunk
+    else:
+        ci = _find_closest_index(separator_indexes, chunk_size)
+        cutoff = separator_indexes[ci] + 1
+        yield txt[:cutoff]
 
-        :raises ValueError
-        """
-        if not cls._openai_client:
-            cls._openai_client = openai.OpenAI()
-
-        prompt = _PROMPT.format(markdown_text=markdown_text)
-
-        print('-------')
-        print(prompt)
-        print('**************************************')
-
-        response = cls._openai_client.chat.completions.create(
-            model=cls._model_name,
-            messages=[
-                {"role": "user", "content": prompt},
-            ],
-            temperature=temperature,
-            max_tokens=max_tokens
-        )
-        response_content = response.choices[0].message.content
-        return response_content
-
-    @classmethod
-    def close(cls):
-        """Closes the vector db and clears the openai client."""
-        cls._openai_client = None
+        for c in get_chunks(txt[cutoff:], chunk_size):
+            yield c
 
 
-_PROMPT = """
-summarize the following markdown text also add a small summary before each
-chunk and also for each chunk add 2 to 3 questions that can be answered by it
-if you encounter a markdown table you should ingnore it all together. also you 
-need to print the headers chain for each chunk:
+# The following are private implementation details.
 
-{markdown_text}
-"""
+def _find_closest_index(sorted_list, target):
+    """Finds the closest index in a sorted list for a given target.
+
+    :param List sorted_list: The list within which to find the closest index.
+
+    :param int target: The target value to find the closest index for.
+
+    :returns: The index of the closest element.
+    :rtype: int.
+    """
+    insert_point = bisect.bisect_left(sorted_list, target)
+
+    if insert_point == 0:
+        return 0
+    if insert_point == len(sorted_list):
+        return len(sorted_list) - 1
+
+    if abs(sorted_list[insert_point] - target) < abs(
+            sorted_list[insert_point - 1] - target):
+        return insert_point
+    else:
+        return insert_point - 1
