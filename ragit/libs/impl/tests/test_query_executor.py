@@ -62,6 +62,8 @@ class TestQueryExecutor(unittest.TestCase):
         dbutil.delete_db_if_exists(self._DB_NAME)
         dbutil.create_db_if_needed(self._DB_NAME, common.get_rag_db_schema())
         os.environ["VECTOR_DB_PROVIDER"] = "MILVUS"
+        if os.environ.get("OPENAI_API_KEY"):
+            del os.environ["OPENAI_API_KEY"]
 
     def tearDown(self):
         """Cleans up the environment upon finishing a test."""
@@ -116,6 +118,7 @@ class TestQueryExecutor(unittest.TestCase):
 
     def test_query(self):
         """Tests the query."""
+        common.init_settings()
         fullpath_to_db, collection_name = self._initialize_env()
         self._create_vector_db(fullpath_to_db, collection_name)
         query_executor.initialize(fullpath_to_db, collection_name)
@@ -130,6 +133,7 @@ class TestQueryExecutor(unittest.TestCase):
 
     def test_format_python_code(self):
         """Tests the format_python_code function. """
+        common.init_settings()
         retrieved = query_executor._QueryExecutor._format_python_code(
             _CODE_TO_FORMAT
         )
@@ -138,6 +142,7 @@ class TestQueryExecutor(unittest.TestCase):
 
     def test_substitute_python_code(self):
         """Tests the _substitute_python_code function."""
+        common.init_settings()
         retrieved = query_executor._QueryExecutor._substitute_python_code(
             _CONTEXT_TO_FORMAT
         )

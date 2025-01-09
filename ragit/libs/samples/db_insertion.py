@@ -8,25 +8,8 @@ import ragit.libs.rag_mgr as rag_mgr
 
 RagManager = rag_mgr.RagManager
 
-_RAG_COLLECTION = "trivial"
-_FULLPATH = "/home/vagrant/ragit-data/trivial/" \
-            "documents/population-by-country.md"
-_SQL_SELECT_CHUNKS = """Select chunk from chunks where fullpath='{}'"""
+_RAG_COLLECTION = "fb1"
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-
-
-def get_inserted_chunk(fullpath):
-    """Returns the inserted chunk for the given path.
-
-    :param str fullpath: The full path to the chunk.
-
-    :return: The inserted chunk.
-    :rtype: str
-    """
-    sql = _SQL_SELECT_CHUNKS.format(fullpath)
-    with dbutil.SimpleSQL() as db:
-        for row in db.execute_query(sql):
-            print(row[0])
 
 
 def initialize():
@@ -57,4 +40,3 @@ def create_rag_collection():
 if __name__ == '__main__':
     initialize()
     create_rag_collection()
-    get_inserted_chunk(_FULLPATH)

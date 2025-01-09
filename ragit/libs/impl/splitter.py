@@ -11,6 +11,8 @@ from langchain_text_splitters import (
     MarkdownHeaderTextSplitter
 )
 
+import ragit.libs.impl.markdown_splitter as markdown_splitter
+import ragit.libs.impl.markdown_parser as markdown_parser
 
 def get_supported_doc_extensions():
     """Returns the list of supported document extensions.
@@ -108,47 +110,20 @@ class _MDDocument:
         self._chunk_contents = []
         self._chunk_metadata = []
 
-        headers_to_split_on = [
-            ("#", "Header 1"),
-            ("##", "Header 2"),
-            ("###", "Header 2"),
-            ('\*\*.*?\*\*', "Header 5")
-        ]
-
-        with open(self._fullpath) as fin:
-            markdown_document = fin.read()
-
-        # Create the MarkdownHeaderTextSplitter
-        markdown_splitter = MarkdownHeaderTextSplitter(
-            headers_to_split_on=headers_to_split_on, strip_headers=False
-        )
-
-        # Split text based on headers
-        md_header_splits = markdown_splitter.split_text(markdown_document)
-
-        chunk_size = 1500
-        chunk_overlap = 230
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=chunk_size, chunk_overlap=chunk_overlap
-        )
-
-        # Split documents
-        splits = text_splitter.split_documents(md_header_splits)
-        for d in splits:
-            headers = ""
-            try:
-                for k, v in d.metadata.items():
-                    headers += v + ", "
-            except Exception as ex:
-                # Something is wrong with the metadata field, print a
-                # message and continue..
-                print(f"Failed to get metadata for split: {str(ex)}")
-
-            self._chunk_contents.append(headers + d.page_content)
+        for node in markdown_parser.iter_markdown(fullpath):
+            headers = node.get_headers()
+            txt = node.get_inner_text()
+            node_type = node.get_section_type()
             metadata = {"fullpath": self._fullpath, "page": 'n/a'}
-            self._chunk_metadata.append(metadata)
 
-        self._chunks = None
+            if node_type == markdown_parser.SectionType.TABLE:
+                self._chunk_contents.append(txt)
+                self._chunk_metadata.append(metadata)
+            else:
+                for chunk in markdown_splitter.get_chunks(txt, chunk_size=500):
+                    self._chunk_contents.append(headers + chunk)
+                    metadata = {"fullpath": self._fullpath, "page": 'n/a'}
+                    self._chunk_metadata.append(metadata)
 
     def get_chunks(self):
         """Iterates through the available chunks.
