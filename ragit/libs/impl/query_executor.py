@@ -8,11 +8,11 @@ import re
 import ragit.libs.common as common
 import ragit.libs.impl.vdb_factory as vector_db
 
-#DEFAULT_MODEL = "gpt-3.5-turbo"
+#DEFAULT_MODEL = "o1-preview"
 DEFAULT_MODEL = "gpt-4o"
 _DEFAULT_TEMPERATURE = 0.2
 _DEFAULT_MAX_TOKENS = 2000
-_DEFAULT_CLOSES_MATCHES_COUNT = 3
+_DEFAULT_MATCHES_COUNT = 3
 
 # Aliases.
 logger = logging.getLogger(__name__)
@@ -28,6 +28,7 @@ class QueryResponse:
     int matches_count: The number of the matches passed to the query.
     str prompt: The prompt used in the query.
     list[str] matches: The list of the matches used in the query.
+    str model_name: The name of the model used in the query.
     """
 
     response: str
@@ -36,6 +37,7 @@ class QueryResponse:
     matches_count: int
     prompt: str
     matches: list[str]
+    model_name: str
 
 
 @common.handle_exceptions
@@ -91,30 +93,15 @@ class _QueryExecutor:
     _openai_client = None
     _model_name = None
 
-    _SYSTEM_PROMPT = """
-    Human: You are an AI assistant. You are able to find answers to
-    the questions from the contextual passage snippets provided.
-    """
-
     _USER_PROMPT = """
-    Use the following pieces of information enclosed in
-    <context> tags to provide an answer to the question
-    enclosed in <question> tags.
-    <context>
-    {context}
-    </context>
-    <question>
-    {question}
-    </question>
+        Based on the following documents can you answer the question:
 
-    If you cannot find relevant information int the context provided then you
-    should run the user question against the full LLM and provide the response
-    as it will come from it. Also in this case your response should not mention
-    the fact that the provided context was not sufficient but you should just
-    ignore the provided context all together.
+        {question}
+
+        These are the documents to use sorted by relevance:
+
+        {context}
     """
-
-    _PYTHON_EXPERT = """You are an expert python programmer."""
 
     _FORMAT_PYTHON_PROMPT = """
     Reformat the passed in the <code> tags python code adding to it the
@@ -162,7 +149,6 @@ class _QueryExecutor:
         response = cls._openai_client.chat.completions.create(
             model=cls._model_name or DEFAULT_MODEL,
             messages=[
-                {"role": "system", "content": cls._PYTHON_EXPERT},
                 {"role": "user", "content": user_prompt},
             ],
         )
@@ -235,7 +221,7 @@ class _QueryExecutor:
         return txt
 
     @classmethod
-    def execute_query(cls, question, k=None, temperature=None, max_tokens=None):
+    def execute_query(cls, question, k=None, temperature=0.2, max_tokens=None):
         """Executes a query getting a RAG response.
 
         :param str question: The question to ask.
@@ -261,28 +247,52 @@ class _QueryExecutor:
             raise ValueError("No Model name.")
 
         if not k:
-            k = _DEFAULT_CLOSES_MATCHES_COUNT
+            k = _DEFAULT_MATCHES_COUNT
 
-        matches = cls._vdb.query(question, k)
-        user_prompt = cls._USER_PROMPT.format(
-            context=matches, question=question
-        )
-
-        if not temperature:
-            temperature = _DEFAULT_TEMPERATURE
 
         if not max_tokens:
             max_tokens = _DEFAULT_MAX_TOKENS
 
-        response = cls._openai_client.chat.completions.create(
-            model=cls._model_name,
-            messages=[
-                {"role": "system", "content": cls._SYSTEM_PROMPT},
-                {"role": "user", "content": user_prompt},
-            ],
-            temperature=temperature,
-            max_tokens=max_tokens
+        matches = cls._vdb.query(question, k)
+
+        context_lines = []
+        context_lines.append("")
+        for doc_index in range(k):
+            context_lines.append(f"\n\nDocument {doc_index + 1}.")
+            context_lines.append(f"{matches[doc_index][0]}")
+            context_lines.append("*" * 80)
+        context = '\n'.join(context_lines)
+
+        user_prompt = cls._USER_PROMPT.format(
+            context=context, question=question
         )
+
+        if not max_tokens:
+            max_tokens = _DEFAULT_MAX_TOKENS
+
+        if not temperature:
+            temperature = _DEFAULT_TEMPERATURE
+
+        # Since the openai API differs in the max_completion_tokens
+        # the following is a workaround.
+        if cls._model_name == "o1-preview":
+            response = cls._openai_client.chat.completions.create(
+                model=cls._model_name,
+                messages=[
+                    {"role": "user", "content": user_prompt},
+                ],
+                max_completion_tokens=max_tokens
+
+            )
+        else:
+            response = cls._openai_client.chat.completions.create(
+                model=cls._model_name,
+                messages=[
+                    {"role": "user", "content": user_prompt},
+                ],
+                temperature=temperature,
+                max_tokens=max_tokens
+            )
 
         response_content = response.choices[0].message.content
 
@@ -294,8 +304,9 @@ class _QueryExecutor:
             temperature=temperature,
             max_tokens=max_tokens,
             matches_count=k,
-            prompt=cls._USER_PROMPT,
-            matches=matches
+            prompt=user_prompt,
+            matches=matches,
+            model_name=cls._model_name
         )
 
         return response
@@ -338,5 +349,3 @@ class _QueryExecutor:
             cls._vdb = None
         cls._model_name = None
         cls._openai_client = None
-
-
