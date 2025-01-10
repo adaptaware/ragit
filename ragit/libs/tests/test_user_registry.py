@@ -111,7 +111,8 @@ class TestUserRegistry(unittest.TestCase):
             max_tokens=1000,
             matches_count=3,
             prompt=question,
-            matches=["abc"]
+            matches=["abc"],
+            model_name="some_model"
         )
         msg_id = UserRegistry.insert_message(
             user_name, t1, question, response, t2

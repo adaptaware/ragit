@@ -42,8 +42,6 @@ class RagManager:
 
     - **vectordb: Stores the vector database.
 
-    - **backups:** Contains backups of the PostgreSQL.
-
     This class should be used as the high-level abstraction of all the
     lower level details that are implemented under the impl directory which
     can be changed at any time without having any dependencies to other
@@ -58,9 +56,6 @@ class RagManager:
 
     :ivar str _vectordb_fullpath: The full path to the vectordb database file.
 
-    :ivar str _backups_dir: The directory holding the backups for
-    the collection.
-
     :cvar str _SHARED_DIR: The shared directory for documents.
 
     :cvar str _VECTOR_COLLECTION_NAME: The name of the collection inside the
@@ -72,9 +67,7 @@ class RagManager:
     _rag_name = None
     _base_dir = None
     _documents_dir = None
-    _synth_documents_dir = None
     _vectordb_fullpath = None
-    _backups_dir = None
 
     def __init__(self, rag_name):
         """Initializer.
@@ -103,12 +96,6 @@ class RagManager:
         common.create_directory_if_not_exists(directory)
         self._documents_dir = directory
 
-        # Assign the synthetic documents directory.
-        self._synth_documents_dir = os.path.join(
-            homedir, self._base_dir, "synthetic", "markdowns", "documents"
-        )
-        common.create_directory_if_not_exists(self._synth_documents_dir)
-
         # Assign the vectordb directory.
         directory = os.path.join(homedir, self._base_dir, "vectordb")
         common.create_directory_if_not_exists(directory)
@@ -126,11 +113,6 @@ class RagManager:
         else:
             raise ValueError("Unsupported vector-db provider.")
 
-        # Assign the backups directory.
-        directory = os.path.join(homedir, self._base_dir, "backups")
-        common.create_directory_if_not_exists(directory)
-        self._backups_dir = directory
-
         query_executor.initialize(
             self._vectordb_fullpath,
             self._VECTOR_COLLECTION_NAME
@@ -142,9 +124,7 @@ class RagManager:
         self._rag_name = None
         self._base_dir = None
         self._documents_dir = None
-        self._synth_documents_dir = None
         self._vectordb_fullpath = None
-        self._backups_dir = None
 
     def get_rag_collection_name(self):
         """Returns the collection name.
@@ -185,15 +165,6 @@ class RagManager:
         """
         return self._documents_dir
 
-    def get_synth_documents_dir(self):
-        """Returns the synthetic directory containing the generated markdowns.
-
-        :return: The directory containing the generated markdowns documents
-        to use for RAG.
-        :rtype: str
-        """
-        return self._synth_documents_dir
-
     def get_vector_db_fullpath(self):
         """Returns the full path to the vector database for the given RAG.
 
@@ -201,14 +172,6 @@ class RagManager:
         :rtype: str
         """
         return self._vectordb_fullpath
-
-    def get_backups_dir(self):
-        """Returns the full path to the backups directory for the given RAG.
-
-        :return: The full path to the backups directory for the given RAG.
-        :rtype: str
-        """
-        return self._backups_dir
 
     @classmethod
     def get_all_rag_collections(cls):
@@ -239,9 +202,6 @@ class RagManager:
         name = self._rag_name
         full_path = self._documents_dir
         total_documents = metrics.get_total_documents(self._documents_dir)
-        total_documents += metrics.get_total_documents(
-                self._synth_documents_dir
-            )
         total_documents_in_db = metrics.get_total_documents_in_db(db)
         total_chunks = metrics.get_total_chunks(db)
         with_embeddings = metrics.get_chunks_with_embeddings(db)
@@ -249,9 +209,8 @@ class RagManager:
         inserted_to_vectordb = metrics.get_chunks_inserted_in_vectordb(db)
         to_insert_to_vector_db = metrics.get_chunks_to_insert_to_vector_db(db)
         total_pdf_files = metrics.get_total_pdf_files(name)
-        pdf_missing_images = metrics.get_pdf_files_missing_images(name)
-        images_missing_markdowns = metrics.get_images_with_missing_markdowns(
-            name
+        pdf_missing_markdowns = len(
+            metrics.get_pdf_files_missing_markdowns(name)
         )
 
         return RagMetrics(
@@ -265,18 +224,8 @@ class RagManager:
             inserted_to_vectordb=inserted_to_vectordb,
             to_insert_to_vector_db=to_insert_to_vector_db,
             total_pdf_files=total_pdf_files,
-            pdf_missing_images=pdf_missing_images,
-            images_missing_markdowns=images_missing_markdowns
+            pdf_missing_markdowns=pdf_missing_markdowns
         )
-
-    def create_images_for_pdfs(self):
-        """Creates the missing images for the pdf files in the collection."""
-        count = 0
-        for pdf_path in pp.get_pdf_missing_images(self._rag_name):
-            imgs = pp.create_images_for_pdf(pdf_path)
-            count += len(imgs)
-            print(f"Processing {pdf_path} created {len(imgs)} image files.")
-        print(f"Created {count} new images.")
 
     def create_missing_markdowns(self):
         """Creates the missing markdowns.
@@ -284,18 +233,16 @@ class RagManager:
         Applies to images that correspond to pdf(s) but still do not have been
         converted to markdowns.
         """
-        count = 0
-        img_paths = (
-            list(pp.get_images_with_missing_markdowns(self._rag_name))
-        )
-        total = len(img_paths)
-        for img_path in img_paths:
+        paths = metrics.get_pdf_files_missing_markdowns(self._rag_name)
+        total = len(paths)
+
+        for count, pdf_path in enumerate(paths,start=1):
+            print(f"{count}/{total}: Processing {pdf_path}")
             t1 = datetime.datetime.now()
-            pp.create_markdown_from_image(img_path)
+            pp.create_markdowns_from_pdf(pdf_path)
             t2 = datetime.datetime.now()
             duration = (t2 - t1).total_seconds()
-            count += 1
-            print(f" {count}/{total}  {img_path} took {duration:.2f} seconds")
+            print(f" {count}/{total}  {pdf_path} took {duration:.2f} seconds")
 
     def insert_chunks_to_db(self, db, max_count=None, verbose=False):
         """Inserts the chunks to the database.
@@ -313,13 +260,6 @@ class RagManager:
         count = chunks_mgr.insert_chunks_to_db(
             db=db,
             directory=self.get_documents_dir(),
-            max_count=max_count,
-            verbose=verbose
-        )
-
-        count += chunks_mgr.insert_chunks_to_db(
-            db=db,
-            directory=self.get_synth_documents_dir(),
             max_count=max_count,
             verbose=verbose
         )
@@ -436,5 +376,4 @@ class RagMetrics:
     inserted_to_vectordb: int
     to_insert_to_vector_db: int
     total_pdf_files: int
-    pdf_missing_images: int
-    images_missing_markdowns: int
+    pdf_missing_markdowns: int

@@ -681,14 +681,8 @@ class UserRegistry:
         shared_dir = common.get_shared_directory()
         collection = cls.get_rag_collection_name()
         documents_dir = os.path.join(shared_dir, collection, "documents")
-        synthetic_dir = os.path.join(shared_dir, collection, "synthetic")
         if file_path.startswith(documents_dir):
             shortened_path = file_path.replace(documents_dir, "")
-            if shortened_path and shortened_path[0] == '/':
-                shortened_path = shortened_path[1:]
-            return shortened_path
-        elif file_path.startswith(synthetic_dir):
-            shortened_path = file_path.replace(synthetic_dir, "")
             if shortened_path and shortened_path[0] == '/':
                 shortened_path = shortened_path[1:]
             return shortened_path

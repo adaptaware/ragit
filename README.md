@@ -22,7 +22,7 @@
 
 # What is RAGit
 
-Welcome to the official documentation for **RAGit**, an open-source framework designed to streamline the development and management of Retrieval-Augmented Generation (RAG) solutions. RAGit eliminates the complexities associated with data handling, model selection, and infrastructure setup, empowering developers to concentrate on application logic and customization. 
+Welcome to the official documentation for **RAGit**, an open-source framework designed to streamline the development and management of Retrieval-Augmented Generation (RAG) solutions. RAGit eliminates the complexities associated with data handling, model selection, and infrastructure setup, empowering developers to concentrate on application logic and customization.
 
 Whether you're working for a small to medium-sized business or seeking a personal solution for creating custom chatbots, RAGit offers a versatile platform to meet your needs. It supports document integration through a command-line interface capable of handling various Large Language Models (LLMs) and vector databases. Meanwhile, the intuitive, web-based front end ensures a user-friendly experience for deploying and managing your applications.
 
@@ -70,7 +70,7 @@ potential and drive your projects forward.
 
 # Development Environment
 
-The recommended development platform for RAGit is based on Vagrant.  To have a fully 
+The recommended development platform for RAGit is based on Vagrant.  To have a fully
 functionall Vagrant box you can follow these:
 ## Build the virtual machine
 
@@ -151,9 +151,15 @@ format:
 ```json
 {
     "OPENAI_API_KEY": "<valid-open-ai-key>",
-    "VECTOR_DB_PROVIDER": "<supported-vector-db>"
+    "VECTOR_DB_PROVIDER": "<supported-vector-db>",
+    "LLAMA_CLOUD_API_KEY": <LLAMA_CLOUD_API_KEY>
+
 }
 ```
+
+You can get the LLAMA_CLOUD_API_KEY from this link: https://cloud.llamaindex.ai/
+
+The LLAMA_CLOUD_API_KEY is needed for the pdf to markdown transformation.
 
 The supported vector databases are the following:
 
@@ -206,7 +212,6 @@ entering the `help` or `?` we can see all the available commands:
 l (list): List all available collections.
 s (stats) <name>: Print its stats for the pass in collection.
 p (process): Process the data the passed in collection.
-i (create_images): Creates the images for the pdfs in the collection.
 m (create_markdowns): Creates missing markdowns.
 h (help): Prints this help message.
 e (exit): Exit.
@@ -230,45 +235,7 @@ If we press `stats dummy` or `s dummy` we see the stats of the statistics for
 the `dummy` collection:
 
 ```
-(RAGit) stats dummy
-name.....................: dummy
-full path................: /home/vagrant/ragit-data/dummy/documents
-total documents..........: 5
-total documents in db....: 0
-total chunks.............: 0
-with embeddings..........: 0
-without embeddings.......: 0
-inserted to vectordb.....: 0
-to insert to vector db...: 0
-total pdf files..........: 2
-pdf missing images.......: 2
-images missing markdowns.: 0
-(RAGit)
-```
 
-The above result tells us that we have 5 non pdf documents and 2 pdf in the RAG
-collection.
-
-It also tell us that that the pdf files are missing both their conversion to
-images and to the corresponding markdowns while nothing is inserted in the
-database of the vectordb.
-
-**Create the images for the pdf**
-
-To create the missing images for the pdf we can type the following command `i
-dummy` or `create_images dummy`
-
-```
-(RAGit) create_images dummy
-Processing /home/vagrant/ragit-data/dummy/documents/patents.pdf created 2 image files.
-Processing /home/vagrant/ragit-data/dummy/documents/nested_dir/nested_2/sample1.pdf created 2 image files.
-Created 4 new images.
-(RAGit)
-```
-
-Now if we see the statistics of the collecion we are getting the following:
-
-```
 (RAGit) s dummy
 name.....................: dummy
 full path................: /home/vagrant/ragit-data/dummy/documents
@@ -280,32 +247,35 @@ without embeddings.......: 0
 inserted to vectordb.....: 0
 to insert to vector db...: 0
 total pdf files..........: 2
-pdf missing images.......: 0
-images missing markdowns.: 4
+pdf missing markdowns....: 2
 (RAGit)
+
 ```
 
-Note that now although we have no missing pdf images we are missing the
-creation of 4 markdowns (those that correctpond to the images we just created).
+The above result tells us that we have 5 non pdf documents and 2 pdf in the RAG
+collection.
 
-**Create the markdowns**
+It also tell us that that the pdf files are missing both their conversion to
+markdowns while nothing is inserted in the database of the vectordb.
+
+**Create the markdowns for the pdf**
 
 To create the missing markdowns for the dummy collection we need to enter the
 following command: `m dummy` or `create_markdowns dummy` as can be see here:
 
 ```
 (RAGit) create_markdowns dummy
- 1/4  /home/vagrant/ragit-data/dummy/synthetic/images/documents/nested_dir/nested_2/sample1/sample1_2.png took 5.94 seconds
- 2/4  /home/vagrant/ragit-data/dummy/synthetic/images/documents/nested_dir/nested_2/sample1/sample1_1.png took 5.16 seconds
- 3/4  /home/vagrant/ragit-data/dummy/synthetic/images/documents/patents/patents_2.png took 8.63 seconds
- 4/4  /home/vagrant/ragit-data/dummy/synthetic/images/documents/patents/patents_1.png took 9.00 seconds
-(RAGit)
+```
+or 
+
+```
+(RAGit) m dummy
 ```
 
 Now the statistics for the dummy collection look as follows:
 
 ```
-(RAGit) stats dummy
+(RAGit) s dummy
 name.....................: dummy
 full path................: /home/vagrant/ragit-data/dummy/documents
 total documents..........: 9
@@ -316,12 +286,12 @@ without embeddings.......: 0
 inserted to vectordb.....: 0
 to insert to vector db...: 0
 total pdf files..........: 2
-pdf missing images.......: 0
-images missing markdowns.: 0
+pdf missing markdowns....: 0
 (RAGit)
+
 ```
 
-as we can see we have no more missing images or markdowns. Still, as we can see
+as we can see we have no more missing markdowns. Still, as we can see
 we need to process the documents and insert them to the vector db which will
 make the RAG collection ready to serve client queries.
 
@@ -332,32 +302,7 @@ command:
 
 
 ```
-(RAGit) process dummy
-Will insert all available chunks to the database.
-2024-12-08 02:42:06.446587 5 /home/vagrant/ragit-data/dummy/documents/sunhaven.md
-2024-12-08 02:42:06.449392 6 /home/vagrant/ragit-data/dummy/documents/hello_world.py
-...
-
-Will insert all available chunks to the database.
-2024-12-08 02:42:06.493501 3 /home/vagrant/ragit-data/dummy/synthetic/markdowns/documents/nested_dir/nested_2/sample1/sample1_2.md
-2024-12-08 02:42:06.498230 6 /home/vagrant/ragit-data/dummy/synthetic/markdowns/documents/patents/patents_1.md
-...
-Inserted 49 chunks.
-Will insert all available embeddings to the database.
-Embeddings count: 1
-Embeddings count: 2
-Embeddings count: 3
-...
-Inserted 49 embeddings.
-updating the vector db.
-1 0
-3 1
-4 2
-....
-49 48
-Totally inserted records: 49
-Inserted 49 chunks to the vector db.
-(RAGit)
+fix this
 ```
 
 Now the stats for the collection look as follows:
@@ -368,18 +313,18 @@ name.....................: dummy
 full path................: /home/vagrant/ragit-data/dummy/documents
 total documents..........: 9
 total documents in db....: 9
-total chunks.............: 49
-with embeddings..........: 49
+total chunks.............: 73
+with embeddings..........: 73
 without embeddings.......: 0
-inserted to vectordb.....: 49
+inserted to vectordb.....: 73
 to insert to vector db...: 0
 total pdf files..........: 2
-pdf missing images.......: 0
-images missing markdowns.: 0
+pdf missing markdowns....: 0
 (RAGit)
+
 ```
 
-and as we can see we have 49 chunks while all of the were inserted to the
+and as we can see we have 73 chunks while all of the were inserted to the
 vector db and are ready for processing.
 
 ## Run Ragit Front End
@@ -400,14 +345,7 @@ following:
 ```
 Running the RAGIT UI as not ADMIN
 Loading vector db, using collection dummy
-2024-12-08 02:51:54,731 - INFO - Loading vector db, using collection dummy
-2024-12-08 02:51:54,901 - INFO - Successfully initialized vector db: /home/vagrant/ragit-data/dummy/vectordb/dummy-chroma-vector.db chunk_embeddings gpt-4-turbo
-2024-12-08 02:51:55,136 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
-2024-12-08 02:51:57,548 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-2024-12-08 02:51:57,557 - INFO - Loading vector db done.. QueryResponse(response='This is about a formal debate on the topic of patents, discussing whether they do more harm than good. The debate took place at the Euroscience Open Forum in Manchester, UK, and featured arguments from both pro- and anti-patent experts. The discussion covered the history of patents, their role in promoting innovation, and the challenges they present, such as high legal costs and accessibility issues for life-saving innovations', temperature=0.2, max_tokens=2000, matches_count=3, prompt='\n    Use the following pieces of information enclosed in \n    <context> tags to provide an answer to the question \n    enclosed in <question> tags.\n    <context>\n    {context}\n    </context>\n    <question>\n    {question}\n    </question>\n    ', matches=[('Hello world.\n\n\n\nThis is a test..', 0.23420744471436916, '/home/vagrant/ragit-data/dummy/documents/hello-world.docx', 0), ('Hello world.\n\n\n\nThis is a test..', 0.23420744471436916, '/home/vagrant/ragit-data/dummy/documents/hello-world.docx', 0), ('The Great IP Debate: Do Patents Do More Harm Than Good? # The Great IP Debate: Do Patents Do More Harm Than Good?  \n**28 Jul 2016 | Viewpoint Patents**  \nA formal debate at Euroscience Open Forum in Manchester pitted pro- and anti-patent experts. You decide the outcome.  \n---  \nPatents have been with us since the 17th century. In exchange for disclosing ones invention the state grants a limited legal monopoly over exploitation. In theory the system encourages more innovation for the good of society. But recently voices of dissent have been rising. Legal costs are high. Specialists game the system to their advantage. Life-saving innovations get priced beyond the means of the poor.  \nOn July 26 in Manchester UK at Euroscience Open Forum Europes biggest biennial science conference Science|Business Editor-in-Chief Richard L. Hudson organised a formal pro- and anti-patent debate among four experts moderated by Dame Nancy Rothwell President and Vice-Chancellor of the University of Manchester. Herewith his paraphrase of the arguments so you can judge for yourself.', 0.26045281122479924, '/home/vagrant/ragit-data/dummy/synthetic/markdowns/documents/patents/patents_1.md', 'n/a')])
-2024-12-08 02:51:57,571 - INFO - Starting ragit on port 13131
-======== Running on http://0.0.0.0:13131 ========
-(Press CTRL+C to quit)
+fix this
 ```
 
 The query / answer we see here is just a self test to validate the connectivity
@@ -445,9 +383,9 @@ Once we are signed in, the environment should look familier to other chatbots.
 
 **Checking the chunks for the response**
 
-If we want to see the documents where the above response was originated from we 
+If we want to see the documents where the above response was originated from we
 click in `History` option as can be seen here:
- 
+
 ![image](https://github.com/user-attachments/assets/33400191-ab3d-44c7-b644-5caac3640c34)
 
 
@@ -794,7 +732,7 @@ The Configuration Parameters are the following:
 - **Example**: `INTERNAL_FRONT_END_PORT=8789`
 
 ## VECTOR_DB_PROVIDER
-- **Description**: Specifies the vector database provider to be used. 
+- **Description**: Specifies the vector database provider to be used.
 - **Options**: `CHROMA` or `MILVUS`
 - **Example**: `VECTOR_DB_PROVIDER=CHROMA`
 
@@ -846,7 +784,7 @@ you ensure that all components of the RAGIT application can easily access the
 necessary configuration settings, leading to a smoother and more efficient
 deployment process.
 
- 
+
 # Back up and Restore
 
 The structure of the directory holding your ragit collection should be the
@@ -854,7 +792,6 @@ following:
 
 ```
 <your-collection-name>
-├── backups
 ├── documents
 ├── registry
 └── vectordb
@@ -988,7 +925,7 @@ User interactions with the frontend are monitored to gather feedback and evaluat
 ## Conclusion
 
 The data pipeline in RAGit is a detailed and iterative process that transforms raw documents into a robust and efficient RAG solution. By adhering to these stages, RAGit ensures precise processing, indexing, and accessibility of data for retrieval-augmented generation tasks, supporting effective applications.
- 
+
  # Why Use Vagrant For Development
 
 Vagrant is a powerful tool for building and managing virtualized development environments. By using Vagrant, developers can ensure a consistent and reproducible environment across all stages of development. This is particularly useful for complex applications like RAGIT, which involve multiple components and dependencies.
@@ -1046,4 +983,4 @@ Vagrant allows developers to create environments that closely match production. 
 ## Summary
 
 Using Vagrant for developing an application like RAGIT provides numerous benefits, including consistent and reproducible environments, simplified setup, isolation, enhanced testing, and ease of collaboration. By leveraging Vagrant, developers can ensure that their development and testing environments closely mimic production, reducing the risk of deployment issues and improving overall efficiency and collaboration.
- 
+

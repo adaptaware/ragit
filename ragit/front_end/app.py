@@ -495,19 +495,12 @@ class RagitHandler:
         tokens = query_requests.split("/")[1:]
         collection_name = Globals.rag_manager.get_rag_collection_name()
 
-        if tokens[0] == "synthetic":
-            file_path = os.path.join(
-                common.get_shared_directory(),
-                collection_name,
-                *tokens
-            )
-        else:
-            file_path = os.path.join(
-                common.get_shared_directory(),
-                collection_name,
-                "documents",
-                *tokens
-            )
+        file_path = os.path.join(
+            common.get_shared_directory(),
+            collection_name,
+            "documents",
+            *tokens
+        )
 
         if not os.path.exists(file_path):
             error_desc = f"Requested file {file_path} not found."

@@ -424,12 +424,7 @@ function display_document_link(filepath) {
         // Evaluate the document type.
         const index = filepath.lastIndexOf('.');
         const file_ext = filepath.slice(index) ? filepath.slice(index) : "";
-        let url = null;
-        if (filepath.startsWith("markdowns")) {
-            url = "/document/synthetic/" + filepath;
-        } else {
-            url = "/document/" + filepath;
-        }
+        let url = "/document/" + filepath;
 
         // Call the applicable function to display the document.
         if (file_ext === ".pdf") {

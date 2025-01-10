@@ -12,7 +12,6 @@ _HELP = """
 l (list): List all available collections.
 s (stats) <name>: Print its stats for the pass in collection.
 p (process): Process the data the passed in collection.
-i (create_images): Creates the images for the pdfs in the collection.
 m (create_markdowns): Creates missing markdowns.
 h (help): Prints this help message.
 e (exit): Exit.
@@ -101,19 +100,6 @@ class RAGCollectionTracker(cmd.Cmd):
             print(f"Inserted {count} embeddings.")
             count = ragger.update_vector_db(db, verbose=True)
             print(f"Inserted {count} chunks to the vector db.")
-
-    @catch_exceptions
-    def do_create_images(self, collection_name):
-        """Creates the images for the pdf files for the passed in collection.
-
-        :param str collection_name: The collection name to use.
-        """
-        ragger = rag_mgr.RagManager(collection_name)
-        ragger.create_images_for_pdfs()
-
-    def do_i(self, arg):
-        """Alias to the create images command.."""
-        self.do_create_images(arg)
 
     @catch_exceptions
     def do_create_markdowns(self, collection_name):
