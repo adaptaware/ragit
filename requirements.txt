@@ -21,3 +21,4 @@ chroma-hnswlib==0.7.6
 markdown==3.0.0
 gTTS==2.5.3
 pdf2image==1.17.0
+llama-parse==0.5.19
