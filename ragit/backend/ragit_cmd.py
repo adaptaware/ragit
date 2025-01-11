@@ -4,6 +4,9 @@ import cmd
 import dataclasses
 import functools
 
+
+import nest_asyncio
+
 import ragit.libs.common as common
 import ragit.libs.dbutil as dbutil
 import ragit.libs.rag_mgr as rag_mgr
@@ -177,6 +180,6 @@ class RAGCollectionTracker(cmd.Cmd):
 
 
 if __name__ == '__main__':
+    nest_asyncio.apply()  # Needed for llama_parse
     common.init_settings()
     RAGCollectionTracker().cmdloop()
-
