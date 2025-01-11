@@ -94,8 +94,13 @@ class _QueryExecutor:
     _model_name = None
 
     _USER_PROMPT = """
-        Based on the following documents can you answer the question:
+        Based on the following documents answer the question that follows.
+        You must provide a confidence level as a percentage ranging from 0 for
+        most inaccurate to 100 for most accurate answer.  The confidence level
+        must be enclosed in asterisks, for example like this: ** condifence
+        level: 95%**
 
+        This is the question to answer:
         {question}
 
         These are the documents to use sorted by relevance:
