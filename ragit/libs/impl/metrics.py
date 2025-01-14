@@ -27,35 +27,24 @@ def get_total_pdf_files(collection_name):
 
 
 @common.handle_exceptions
-def get_pdf_files_missing_images(collection_name):
-    """Counts PDF files in a collection missing images.
+def get_pdf_files_missing_markdowns(collection_name):
+    """Discovers the pdf with missing markdowns.
 
     :param str collection_name: The name of the collection to check for PDFs
     missing images.
 
-    :returns: Number of PDF files without images.
-    :rtype: int
+    :returns: The PDF files without markdowns.
+    :rtype: list[str]
     """
-
-    missing_images = list(
-        pdf_processor.get_pdf_missing_images(collection_name)
-    )
-    return len(missing_images)
-
-
-@common.handle_exceptions
-def get_images_with_missing_markdowns(collection_name):
-    """Gets the count of images with missing markdowns in a collection.
-
-    :param str collection_name: The name of the collection to check.
-
-    :returns: The number of images missing markdowns.
-    :rtype: int
-    """
-    missing_markdowns = list(
-        pdf_processor.get_images_with_missing_markdowns(collection_name)
-    )
-    return len(missing_markdowns)
+    directory = os.path.join(common.get_shared_directory(), collection_name)
+    pdf_files = []
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith(".pdf"):
+                fullpath = os.path.join(root, file)
+                if pdf_processor.needs_to_create_markdowns(fullpath):
+                    pdf_files.append(fullpath)
+    return pdf_files
 
 
 @common.handle_exceptions

@@ -6,7 +6,6 @@
 #
 # - Removes the corresponding registry database.
 # - Removes the backup directory.
-# - Removes the synthetic directory.
 # - Removes the corresponding psql database.
 # - Removes the corresponding vectordb database.
 #
@@ -22,6 +21,4 @@
 
 set -x
 dropdb -U postgres $1
-rm -rf $HOME/ragit-data/$1/backups
-rm -rf $HOME/ragit-data/$1/synthetic
 rm -rf $HOME/ragit-data/$1/vectordb

@@ -4,6 +4,9 @@ import cmd
 import dataclasses
 import functools
 
+
+import nest_asyncio
+
 import ragit.libs.common as common
 import ragit.libs.dbutil as dbutil
 import ragit.libs.rag_mgr as rag_mgr
@@ -12,7 +15,6 @@ _HELP = """
 l (list): List all available collections.
 s (stats) <name>: Print its stats for the pass in collection.
 p (process): Process the data the passed in collection.
-i (create_images): Creates the images for the pdfs in the collection.
 m (create_markdowns): Creates missing markdowns.
 h (help): Prints this help message.
 e (exit): Exit.
@@ -103,19 +105,6 @@ class RAGCollectionTracker(cmd.Cmd):
             print(f"Inserted {count} chunks to the vector db.")
 
     @catch_exceptions
-    def do_create_images(self, collection_name):
-        """Creates the images for the pdf files for the passed in collection.
-
-        :param str collection_name: The collection name to use.
-        """
-        ragger = rag_mgr.RagManager(collection_name)
-        ragger.create_images_for_pdfs()
-
-    def do_i(self, arg):
-        """Alias to the create images command.."""
-        self.do_create_images(arg)
-
-    @catch_exceptions
     def do_create_markdowns(self, collection_name):
         """Creates the missing markdowns.
 
@@ -191,6 +180,6 @@ class RAGCollectionTracker(cmd.Cmd):
 
 
 if __name__ == '__main__':
+    nest_asyncio.apply()  # Needed for llama_parse
     common.init_settings()
     RAGCollectionTracker().cmdloop()
-
