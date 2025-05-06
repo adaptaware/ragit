@@ -439,13 +439,12 @@ class UserRegistry:
                 cursor = conn.cursor()
                 for row in cursor.execute(cls._SQL_SELECT_PASSWD, (user_name,)):
                     hashed_passwd = row[0]
-                    is_valid = bcrypt.checkpw(
-                        password.encode('utf-8'), hashed_passwd
-                    )
-                    if not is_valid:
-                        raise ConnectionRefusedError
-                    else:
-                        return
+                    # Ensure hashed_passwd is bytes, not str
+                    if isinstance(hashed_passwd, str):
+                        hashed_passwd = hashed_passwd.encode('utf-8')
+                    is_valid = bcrypt.checkpw(password.encode('utf-8'),
+                                              hashed_passwd)
+                    return is_valid
             finally:
                 if cursor:
                     cursor.close()
